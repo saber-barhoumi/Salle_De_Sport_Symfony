@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}🆕 Créer une nouvelle catégorie{% endblock %}
+
+{% block body %}
+    <h1>🛍️ Créer une nouvelle catégorie de produit</h1>
+
+    <div class="mb-4">
+        <img src="{{ asset('img/illustration.png') }}" alt="Illustration de catégorie" style="max-width: 100%; height: auto;">
+    </div>
+
+    {{ form_start(form) }}
+        {# Utilisez 'form_row' pour un champ spécifique sans redondance #}
+        {{ form_row(form.nom, {'label': 'Nom de la catégorie 🏷️'}) }}  
+        <button type="submit" class="btn btn-primary">➕ Ajouter la catégorie</button>
+    {{ form_end(form) }}
+
+    <div class="mt-3">
+        <p>🔍 Assurez-vous de remplir tous les champs nécessaires avant de soumettre le formulaire.</p>
+    </div>
+{% endblock %}

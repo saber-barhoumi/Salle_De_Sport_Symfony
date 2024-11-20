@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}📦 CategorieProduit Index 🎉{% endblock %}
+
+{% block body %}
+    <!-- Titre principal avec emoji -->
+    <h1 class="text-center my-5" style="font-size: 2.5rem; color: #333;">
+        📦 Liste des catégories de produits 🏷️
+    </h1>
+
+    <!-- Image d'illustration pour rendre la page plus attrayante -->
+    <div class="text-center mb-5">
+        <img src="{{ asset('images/categories.png') }}" alt="Catégories de produits" class="img-fluid" style="max-width: 250px;">
+    </div>
+
+    <!-- Table des catégories -->
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>🆔 Id</th>
+                <th>Nom de la catégorie 🏷️</th>
+                <th>Actions ⚙️</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for categorie_produit in categorie_produits %}
+            <tr>
+                <td>{{ categorie_produit.id }}</td>
+                <td>{{ categorie_produit.nom }}</td>
+                <td>
+                    <!-- Lien show avec emoji -->
+                    <a href="{{ path('categorie_produit_show', {'id': categorie_produit.id}) }}" class="btn btn-info btn-sm">
+                        👀 Voir
+                    </a>
+                    <!-- Lien edit avec emoji -->
+                    <a href="{{ path('categorie_produit_edit', {'id': categorie_produit.id}) }}" class="btn btn-warning btn-sm">
+                        ✏️ Modifier
+                    </a>
+                    <!-- Formulaire delete -->
+                    <form method="post" action="{{ path('categorie_produit_delete', {'id': categorie_produit.id}) }}" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie_produit.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')">❌ Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-danger">Aucune catégorie trouvée 😞</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Lien pour créer une nouvelle catégorie avec emoji -->
+    <div class="text-center mt-4">
+        <a href="{{ path('categorie_produit_new') }}" class="btn btn-success btn-lg">
+            ➕ Ajouter une nouvelle catégorie
+        </a>
+    </div>
+{% endblock %}
