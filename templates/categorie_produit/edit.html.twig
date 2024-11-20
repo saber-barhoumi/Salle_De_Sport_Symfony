@@ -1,31 +1,28 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le Produit{% endblock %}
+{% block title %}Modifier la catégorie produit{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1>Modifier un Produit</h1>
+    <h1>Modifier la catégorie de produit</h1>
 
-    <!-- Formulaire de modification du produit -->
-    <form method="post" enctype="multipart/form-data">
-        {{ form_start(form) }}
+    {# Formulaire d'édition de la catégorie produit #}
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}  {# Champ pour le nom de la catégorie #}
+        <button type="submit" class="btn btn-primary">
+            ✏️ Modifier
+        </button>
+    {{ form_end(form) }}
 
-        <!-- Champ 'nom' -->
-        <div class="mb-3">
-            {{ form_label(form.nom) }}
-            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-        </div>
+    {# Lien pour revenir à la liste des catégories de produits #}
+    <a href="{{ path('categorie_produit_index') }}" class="btn btn-secondary">Retour à la liste</a>
 
-
-
-        <button type="submit" class="btn btn-primary">Mettre à jour</button>
-
-        {{ form_end(form) }}
+    {# Formulaire de suppression avec emoji de poubelle #}
+    <form method="post" action="{{ path('categorie_produit_delete', {'id': categorie_produit.id}) }}" 
+          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');" class="d-inline">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie_produit.id) }}">
+        <button type="submit" class="btn btn-danger">
+            🗑️ Supprimer
+        </button>
     </form>
-
-    <a href="{{ path('produit_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
-
-    <!-- Formulaire de suppression -->
-    {{ include('produit/_delete_form.html.twig') }}
-</div>
 {% endblock %}

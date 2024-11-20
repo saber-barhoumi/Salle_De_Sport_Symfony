@@ -1,9 +1,7 @@
-{{ form_start(form) }}
-
-    {# Render only the necessary fields #}
-    {% set rendered_nom = form_row(form.nom, {'label': 'Nom de la catégorie 🏷️'}) %}
-    {{ rendered_nom }}
-
-    <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
-
-{{ form_end(form) }}
+{% for label, messages in app.flashes %}
+    <div class="alert alert-{{ label }}">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endfor %}
