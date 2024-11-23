@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil des Types de séances{% endblock %}
+
+{% block body %}
+<h1>Bienvenue sur la gestion des Types de séances</h1>
+<a href="{{ path('list_typeseance') }}">Voir la liste des Types de séances</a>
+<a href="{{ path('add_typeseance') }}">Ajouter un nouveau type</a>
+{% endblock %}
