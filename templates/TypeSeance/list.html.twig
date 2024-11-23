@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Types de séances{% endblock %}
+
+{% block body %}
+<h1 class="my-4 text-center">Liste des Types</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>NOM</th>
+                <th>DESCRIPTION</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seancetype in seancetype %}
+              <tr>
+                <td>{{ seancetype.id }}</td>
+                <td>{{ seancetype.type }}</td>
+                <td>{{ seancetype.description }}</td>
+                <td>
+                    <a href="{{ path('modify_typeseance', { id: seancetype.id }) }}" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{{ path('delete_typeseance', { id: seancetype.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                </td>
+              </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-center">Aucune type de séance disponible.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ path('add_typeseance') }}" class="btn btn-success">Ajouter un nouveau type</a>
+</div>
+{% endblock %}

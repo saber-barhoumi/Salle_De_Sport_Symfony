@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une séance{% endblock %}
+
+{% block body %}
+<h1 class="my-4 text-center">Ajouter une nouvelle séance</h1>
+
+<div class="container">
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    
+    <div class="mb-3">
+        {{ form_label(form.date, 'Date de la séance', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.date) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.duree, 'Durée (en heures)', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.duree) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.capaciteMax, 'Capacité maximale', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.capaciteMax, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.capaciteMax) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.salle, 'Salle', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.salle, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.salle) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.statut, 'Statut', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.statut) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.participantsinscrits, 'Participants inscrits', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.participantsinscrits, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.participantsinscrits) }}
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success">Créer la séance</button>
+    </div>
+    
+    {{ form_end(form) }}
+    
+    <div class="text-center mt-4">
+        <a href="{{ path('list_seance') }}" class="btn btn-secondary">Retour à la liste des séances</a>
+    </div>
+</div>
+{% endblock %}
