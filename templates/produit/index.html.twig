@@ -34,7 +34,8 @@
                     <th scope="col">📷 Image</th>
                     <th scope="col">💲 Prix (€)</th>
                     <th scope="col">📦 Quantité Stock</th>
-                    <th scope="col">⚙️ Actions</th>
+                    <th scope="col">🏷️ Catégorie</th>
+                     <th scope="col">⚙️ Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,13 +53,17 @@
                         </td>
                         <td class="text-center">{{ produit.prix|number_format(2, '.', ',') }} €</td>
                         <td class="text-center">{{ produit.quantiteStock }}</td>
+                                                <td class="text-center">{{ produit.CategorieProduit.nom }}</td>
+
                         <td class="text-center">
                             <a href="{{ path('produit_show', {'id': produit.id}) }}" class="btn btn-info btn-sm" title="Voir">
                                 👁️ Voir
                             </a>
-                            <a href="{{ path('produit_edit', {'id': produit.id}) }}" class="btn btn-warning btn-sm" title="Modifier">
-                                ✏️ Modifier
+<a href="{{ path('produit_edit', {'categorieId': produit.CategorieProduit.id, 'id': produit.id}) }}" class="btn btn-warning btn-sm" title="Modifier">                                ✏️ Modifier
                             </a>
+                             </a>
+            {{ include('produit/_delete_form.html.twig') }}
+        </div>
                         </td>
                     </tr>
                 {% else %}

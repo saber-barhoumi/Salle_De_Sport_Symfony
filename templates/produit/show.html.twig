@@ -31,12 +31,16 @@
                 <th>QuantiteStock</th>
                 <td>{{ produit.quantiteStock }}</td>
             </tr>
+            <tr>
+                <th>Catagorie</th>
+                <td>{{ produit.CategorieProduit.nom }}</td>
+            </tr>
         </tbody>
     </table>
 
     <a href="{{ path('produit_index') }}">back to list</a>
 
-    <a href="{{ path('produit_edit', {'id': produit.id}) }}">edit</a>
+    <a href="{{ path('produit_edit', {'categorieId': produit.categorieProduit.id, 'id': produit.id}) }}">Éditer le produit</a>
 
     {{ include('produit/_delete_form.html.twig') }}
 {% endblock %}

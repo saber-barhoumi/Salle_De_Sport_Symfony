@@ -3,34 +3,17 @@
 {% block title %}Modifier un Produit{% endblock %}
 
 {% block body %}
-<div class="container my-5">
-    <!-- Image de bannière -->
-    <div class="text-center">
-        <img src="/images/edit-product-banner.jpg" alt="Modifier un Produit" class="img-fluid rounded mb-4" style="max-width: 100%; height: auto;">
-    </div>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">
+        ✏️ Modifier le Produit
+    </h1>
 
-    <!-- Titre et description -->
-    <div class="text-center mb-4">
-        <h1 class="display-6 text-warning animate__animated animate__fadeInDown">
-            <i class="fas fa-edit"></i> Modifier le Produit
-        </h1>
-        <p class="text-muted">Mettez à jour les informations du produit en remplissant le formulaire ci-dessous.</p>
-    </div>
-
-    <!-- Formulaire d'édition dans une carte -->
-    <div class="card shadow-lg">
-        <div class="card-header bg-warning text-white">
-            <h5 class="mb-0">Formulaire de Modification</h5>
+    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        {{ form_widget(form) }}
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-success">💾 Enregistrer</button>
+            <a href="{{ path('produit_index') }}" class="btn btn-outline-secondary">↩ Retour</a>
         </div>
-        <div class="card-body">
-            {{ include('produit/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
-        </div>
-        <div class="card-footer text-center">
-            <a href="{{ path('produit_index') }}" class="btn btn-outline-secondary">
-                ⬅️ Retour à la liste
-            </a>
-            {{ include('produit/_delete_form.html.twig') }}
-        </div>
-    </div>
+    {{ form_end(form) }}
 </div>
 {% endblock %}

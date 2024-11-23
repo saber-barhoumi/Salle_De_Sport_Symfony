@@ -18,7 +18,7 @@ class Produit
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $Description = null;
+    private ?string $description = null;
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
@@ -26,9 +26,12 @@ class Produit
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $prix = null;
 
-
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')] // Mapping added
     private ?int $quantiteStock = null;
+
+    #[ORM\ManyToOne(inversedBy: 'produits')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?CategorieProduit $CategorieProduit = null;
 
     public function getId(): ?int
     {
@@ -49,12 +52,12 @@ class Produit
 
     public function getDescription(): ?string
     {
-        return $this->Description;
+        return $this->description;
     }
 
     public function setDescription(string $Description): static
     {
-        $this->Description = $Description;
+        $this->description = $Description;
 
         return $this;
     }
@@ -91,6 +94,18 @@ class Produit
     public function setQuantiteStock(int $quantiteStock): static
     {
         $this->quantiteStock = $quantiteStock;
+
+        return $this;
+    }
+
+    public function getCategorieProduit(): ?CategorieProduit
+    {
+        return $this->CategorieProduit;
+    }
+
+    public function setCategorieProduit(?CategorieProduit $CategorieProduit): static
+    {
+        $this->CategorieProduit = $CategorieProduit;
 
         return $this;
     }

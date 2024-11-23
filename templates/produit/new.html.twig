@@ -4,73 +4,65 @@
 {% block title %}Créer un Nouveau Produit{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="mb-4 text-center">
-        🏋️‍♀️ Créer un Nouveau Produit pour votre Salle de Sport 🛒
-    </h1>
-
-    <!-- Affichage des alertes -->
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ✅ {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+       <div class="form-group mb-4">
+        <label class="form-label" for="Description">
+            📝 {{ form_label(form.description, 'Description') }}
+        </label>
+        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez les caractéristiques du produit'}}) }}
+        <div class="form-text text-muted">
+            Fournissez des détails comme les dimensions, les matériaux...
         </div>
-    {% endfor %}
-
-    <!-- Image illustrative -->
-    <div class="text-center mb-4">
-        <img src="https://via.placeholder.com/800x300?text=Ajoutez+vos+Produits+ici" alt="Produits de salle de sport" class="img-fluid rounded">
+        {{ form_errors(form.description) }}
     </div>
 
-    <!-- Formulaire -->
-    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-        <div class="form-group mb-4">
-            <label class="form-label" for="nom">
-                🏷️ {{ form_label(form.nom, 'Nom du Produit') }}
-            </label>
-            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom du produit'}}) }}
-            {{ form_errors(form.nom) }}
+    <div class="form-group mb-4">
+        <label class="form-label" for="image">
+            🖼️ {{ form_label(form.image, 'Image du Produit') }}
+        </label>
+        {{ form_widget(form.image, {'attr': {'class': 'form-control', 'accept': 'image/*'}}) }}
+        <div class="form-text text-muted">
+            Téléchargez une image de haute qualité pour ce produit.
         </div>
+        {{ form_errors(form.image) }}
+    </div>
 
-        <div class="form-group mb-4">
-            <label class="form-label" for="description">
-                📝 {{ form_label(form.description, 'Description') }}
-            </label>
-            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Entrez la description du produit'}}) }}
-            {{ form_errors(form.description) }}
-        </div>
+    <div class="form-group mb-4">
+        <label class="form-label" for="prix">
+            💵 {{ form_label(form.prix, 'Prix (en Dinars)') }}
+        </label>
+        {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Ex : 99.99'}}) }}
+        {{ form_errors(form.prix) }}
+    </div>
 
-        <div class="form-group mb-4">
-            <label class="form-label" for="prix">
-                💲 {{ form_label(form.prix, 'Prix') }}
-            </label>
-            {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le prix du produit'}}) }}
-            {{ form_errors(form.prix) }}
-        </div>
-
-        <div class="form-group mb-4">
-            <label class="form-label" for="image">
-                📷 {{ form_label(form.image, 'Image du Produit') }}
-            </label>
-            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(form.image) }}
-        </div>
-
-        <div class="form-group mb-4">
-            <label class="form-label" for="quantiteStock">
-                📦 {{ form_label(form.quantiteStock, 'Quantité en Stock') }}
-            </label>
-            {{ form_widget(form.quantiteStock, {'attr': {'class': 'form-control', 'placeholder': 'Entrez la quantité en stock'}}) }}
-            {{ form_errors(form.quantiteStock) }}
-        </div>
-
-        <div class="text-center">
-            <button type="submit" class="btn btn-success btn-lg">
-                ➕ Ajouter le Produit
-            </button>
-        </div>
-    {{ form_end(form) }}
+   <div class="form-group mb-4">
+    <label class="form-label" for="quantiteStock">
+        📦 {{ form_label(form.quantiteStock, 'Quantité en Stock') }}
+    </label>
+    {{ form_widget(form.quantiteStock, {'attr': {'class': 'form-control', 'placeholder': 'Ex : 50'}}) }}
+    {{ form_errors(form.quantiteStock) }}
 </div>
+
+    <div class="form-group mb-4">
+        <label class="form-label" for="CategorieProduit">
+            🏷️ {{ form_label(form.CategorieProduit, 'Catégorie du Produit') }}
+        </label>
+        {{ form_widget(form.CategorieProduit, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.CategorieProduit) }}
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success btn-lg mt-3">
+                <a href="{{ path('produit_new') }}" class="btn btn-secondary btn-lg mt-3">
+
+            💾 Enregistrer le Produit
+        </button>
+        <a href="{{ path('produit_index') }}" class="btn btn-secondary btn-lg mt-3">
+            ⬅️ Retour à la Liste
+        </a>
+    </div>
+{{ form_end(form) }}
+
+
 
 <!-- Styles personnalisés pour embellir -->
 <style>

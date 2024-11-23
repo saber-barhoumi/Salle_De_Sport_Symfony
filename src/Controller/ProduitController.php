@@ -9,7 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\String\UnicodeString; // Ajouter cette ligne
+use Symfony\Component\String\UnicodeString; 
+use App\Repository\ProduitRepository;
+use App\Entity\CategorieProduit;
+
 
 #[Route('/produit')]
 class ProduitController extends AbstractController
@@ -41,6 +44,8 @@ class ProduitController extends AbstractController
                     );
                 } catch (FileException $e) {
                     // Gérer l'exception en cas d'erreur lors du téléchargement du fichier
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
+                    return $this->redirectToRoute('produit_new');
                 }
 
                 // Définir le nom du fichier pour l'entité
@@ -77,28 +82,14 @@ class ProduitController extends AbstractController
          throw $this->createNotFoundException('No product found for id ' . $id);
      }
 
+     
+     $categorie = $produit->getCategorieProduit();
+
      return $this->render('produit/show.html.twig', [
          'produit' => $produit,
+         'categorie' => $categorie,
      ]);
  }
- #[Route('/{id}/edit', name: 'produit_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Produit $produit, EntityManagerInterface $em): Response
-    {
-        $form = $this->createForm(ProduitType::class, $produit);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush(); // Save the updated product
-
-            return $this->redirectToRoute('produit_index'); // Redirect to product list
-        }
-
-        return $this->render('produit/edit.html.twig', [
-            'form' => $form->createView(),
-            'produit' => $produit,
-        ]);
-
-    }
     
     #[Route('/{id}/delete', name: 'produit_delete', methods: ['POST'])]
 public function delete(Request $request, Produit $produit, EntityManagerInterface $em): Response
@@ -106,12 +97,42 @@ public function delete(Request $request, Produit $produit, EntityManagerInterfac
     // Ensure the form was submitted from the correct page
     if ($this->isCsrfTokenValid('delete' . $produit->getId(), $request->request->get('_token'))) {
         $em->remove($produit);
-        $em->flush();
+        $this->addFlash('success', 'Produit supprimé avec succès.');
+
     }
 
     return $this->redirectToRoute('produit_index'); // Redirect to the product index page after deletion
 }
-    
+#[Route('/produit/categorie/{categorieId<\d+>}/produit/{id}/edit', name: 'produit_edit', methods: ['GET', 'POST'])]
+public function editProduitByCategorie(string $categorieId, int $id, ProduitRepository $produitRepository, Request $request, EntityManagerInterface $em): Response
+{
+    $categorie = $em->getRepository(CategorieProduit::class)->find($categorieId);
+
+    if (!$categorie) {
+        throw $this->createNotFoundException('Catégorie non trouvée pour l\'ID ' . $categorieId);
+    }
+
+    $produit = $produitRepository->findOneBy(['id' => $id, 'CategorieProduit' => $categorie]);
+
+    if (!$produit) {
+        throw $this->createNotFoundException('Produit non trouvé dans cette catégorie');
+    }
+
+    $form = $this->createForm(ProduitType::class, $produit);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $em->flush();
+        $this->addFlash('success', 'Produit modifié avec succès.');
+        return $this->redirectToRoute('produit_index');
+    }
+
+    return $this->render('produit/edit.html.twig', [
+        'form' => $form->createView(),
+        'produit' => $produit,
+        'categorie' => $categorie,
+    ]);
+}
 
 
 
