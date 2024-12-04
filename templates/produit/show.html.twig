@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base2.html.twig' %}
 
 {% block title %}Produit{% endblock %}
 
@@ -20,8 +20,14 @@
                 <td>{{ produit.Description }}</td>
             </tr>
             <tr>
-                <th>Image</th>
-                <td>{{ produit.image }}</td>
+            <th>Image</th>
+            <td>
+                {% if produit.image %}
+                    <img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.nom }}" style="max-width: 150px; height: auto;">
+                {% else %}
+                    <p>Aucune image disponible</p>
+                {% endif %}
+            </td>
             </tr>
             <tr>
                 <th>Prix</th>
@@ -32,15 +38,35 @@
                 <td>{{ produit.quantiteStock }}</td>
             </tr>
             <tr>
-                <th>Catagorie</th>
+                <th>Catégorie</th>
                 <td>{{ produit.CategorieProduit.nom }}</td>
             </tr>
-        </tbody>
+            <tr>
+    {% for tag in produit.tags %}
+        <li>{{ tag.nom }}</li>
+    {% endfor %}
+</tr>        </tbody>
     </table>
 
-    <a href="{{ path('produit_index') }}">back to list</a>
+    <!-- Section des boutons -->
+    <div class="text-center mt-4">
+        <!-- Bouton Retour à la liste -->
+        <a href="{{ path('produit_index') }}" class="btn btn-outline-secondary mx-2" style="width: 150px;">
+            📋 Retour à la liste
+        </a>
 
-    <a href="{{ path('produit_edit', {'categorieId': produit.categorieProduit.id, 'id': produit.id}) }}">Éditer le produit</a>
+        <!-- Bouton Éditer le produit -->
+        <a href="{{ path('produit_edit', {'categorieId': produit.categorieProduit.id, 'id': produit.id}) }}" class="btn btn-outline-primary mx-2" style="width: 150px;">
+            ✏️ Éditer
+        </a>
 
-    {{ include('produit/_delete_form.html.twig') }}
+        <!-- Bouton Supprimer -->
+         <form method="post" action="{{ path('produit_delete', {'id': produit.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');" style="display: inline-block;">
+            <!-- Token CSRF -->
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ produit.id) }}">
+            <button type="submit" class="btn btn-outline-danger mx-2" style="width: 150px;">
+                🗑️ Supprimer
+            </button>
+        </form>
+    </div>
 {% endblock %}

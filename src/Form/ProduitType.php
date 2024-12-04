@@ -11,59 +11,46 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType; // Correct import
+use Symfony\Component\Form\Extension\Core\Type\TextType; 
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use App\Entity\Tag; 
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ProduitType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('description', TextType::class, [
-                'label' => 'Description',
-                'required' => true,
+        ->add('nom', TextType::class) // Champ nom
+        ->add('description', TextType::class, [ // Champ description
+            'label' => 'Description',
+            'required' => true,
+        ])
+        ->add('prix', TextType::class) // Champ prix
+        ->add('quantiteStock', TextType::class) // Champ quantité en stock
+        ->add('CategorieProduit', EntityType::class, [ // Liste déroulante pour CategorieProduit
+            'class' => CategorieProduit::class,
+            'choice_label' => 'nom',
+        ])
+        ->add('image', FileType::class, [
+            'label' => 'Image du Produit',
+            'required' => false,
+            'mapped' => false, // Permet de ne pas lier directement ce champ à la propriété "image"
+            'attr' => ['accept' => 'image/*']
             ])
-            ->add('image', FileType::class, [
-                'label' => 'Image du produit (JPEG/PNG uniquement)',
-                'mapped' => false, // Ne pas lier ce champ directement à l'entité
-                'required' => false,
-                'attr' => ['class' => 'form-control'],
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2M',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                        ],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG ou PNG).',
-                    ]),
-                ],
-            ])
-            ->add('prix', TextType::class, [
-                'label' => 'Prix du produit',
-                'required' => true,
-            ])
-            ->add('quantiteStock', IntegerType::class, [
-                'label' => 'Quantité en stock',
-                'required' => true,
-                'constraints' => [
-                    new NotNull([
-                        'message' => 'La quantité en stock ne peut pas être vide.',
-                    ]),
-                ],
-            ])
-            ->add('CategorieProduit', EntityType::class, [
-                'class' => CategorieProduit::class,
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
                 'choice_label' => 'nom',
-            ]);
-            
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Produit::class,
+                'multiple' => true,
+                'expanded' => true, // Optional for checkboxes
+          
         ]);
-    }
+}
+
+public function configureOptions(OptionsResolver $resolver): void
+{
+    $resolver->setDefaults([
+        'data_class' => Produit::class, // Classe de l'entité associée
+    ]);
+}
 }

@@ -210,3 +210,49 @@
     
 })(jQuery);
 
+
+
+
+// js  Tag
+function loadProduitsByTag(tagId) {
+    const container = document.getElementById('produitsContainer');
+    container.innerHTML = '<p class="text-muted">Chargement des produits...</p>'; // Message initial
+
+    fetch(`/tag/${tagId}/produits`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Données reçues:', data);  // Affichage dans la console pour débogage
+            container.innerHTML = ''; // Vider le contenu précédent
+
+            // Si les produits sont vides, afficher un message
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-muted">Aucun produit associé à ce tag.</p>';
+                return;
+            }
+
+            // Affichage des produits dans le modal
+            data.forEach(produit => {
+                container.innerHTML += `
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${produit.nom}</h5>
+                                <p class="card-text">Prix : ${produit.prix} €</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des produits:', error);
+            container.innerHTML = `<p class="text-danger">Une erreur est survenue : ${error.message}</p>`;
+        });
+}
+
+    

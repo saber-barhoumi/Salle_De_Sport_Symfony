@@ -1,0 +1,28 @@
+{# Formulaire de recherche avancée #}
+{% extends 'base2.html.twig' %}
+<h1>Recherche Avancée</h1>
+
+{{ form_start(form) }}
+    <div>
+        {{ form_row(form.nom) }}
+        {{ form_row(form.categorie) }}
+        {{ form_row(form.prixMin) }}
+        {{ form_row(form.prixMax) }}
+    </div>
+    <button type="submit">Rechercher</button>
+{{ form_end(form) }}
+
+<h2>Résultats</h2>
+{% if produits is empty %}
+    <p>Aucun produit trouvé.</p>
+{% else %}
+    <ul>
+        {% for produit in produits %}
+            <li>
+                <strong>{{ produit.nom }}</strong> ({{ produit.categorie.nom }}) <br>
+                Prix: {{ produit.prix }} <br>
+                Description: {{ produit.description }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

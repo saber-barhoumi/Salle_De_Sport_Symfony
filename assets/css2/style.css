@@ -3255,3 +3255,17 @@ ol {
 		font-size: 28px;
 	}
 }
+/* Ensure that the contact information is displayed in a row */
+.topbar-contact {
+    display: flex;
+    align-items: center; /* Vertically center the icons and text */
+}
+
+/* Space out the email and phone sections */
+.email, .phone {
+    margin-right: 20px; /* Add some space between the two */
+}
+
+.email i, .phone i {
+    margin-right: 5px; /* Add space between the icon and the text */
+}

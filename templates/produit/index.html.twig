@@ -2,6 +2,10 @@
 
 {% block title %}Liste des Produits{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('public/css/styles.css') }}">
+{% endblock %}
+
 {% block body %}
 <div class="container mt-5">
     <h1 class="mb-4 text-center">
@@ -16,13 +20,6 @@
         </div>
     {% endfor %}
 
-    <!-- Bouton pour créer un nouveau produit -->
-    <div class="text-end mb-4">
-        <a href="{{ path('produit_new') }}" class="btn btn-primary">
-            ➕ Ajouter un Nouveau Produit
-        </a>
-    </div>
-
     <!-- Tableau des produits -->
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -35,7 +32,8 @@
                     <th scope="col">💲 Prix (€)</th>
                     <th scope="col">📦 Quantité Stock</th>
                     <th scope="col">🏷️ Catégorie</th>
-                     <th scope="col">⚙️ Actions</th>
+                    <th scope="col">🏷️ Tags</th>  <!-- Nouvelle colonne pour afficher les tags -->
+                    <th scope="col">⚙️ Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,68 +51,53 @@
                         </td>
                         <td class="text-center">{{ produit.prix|number_format(2, '.', ',') }} €</td>
                         <td class="text-center">{{ produit.quantiteStock }}</td>
-                                                <td class="text-center">{{ produit.CategorieProduit.nom }}</td>
+                        <td class="text-center">{{ produit.CategorieProduit.nom }}</td>
+
+                        <td class="text-center">
+                            <!-- Affichage des tags associés à chaque produit -->
+                            {% if produit.tags|length > 0 %}
+                                {% for tag in produit.tags %}
+                                    <span class="badge bg-primary">{{ tag.nom }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted">Aucun tag</span>
+                            {% endif %}
+                        </td>
 
                         <td class="text-center">
                             <a href="{{ path('produit_show', {'id': produit.id}) }}" class="btn btn-info btn-sm" title="Voir">
                                 👁️ Voir
                             </a>
-<a href="{{ path('produit_edit', {'categorieId': produit.CategorieProduit.id, 'id': produit.id}) }}" class="btn btn-warning btn-sm" title="Modifier">                                ✏️ Modifier
+                            <a href="{{ path('produit_edit', {'categorieId': produit.CategorieProduit.id, 'id': produit.id}) }}" class="btn btn-warning btn-sm" title="Modifier">
+                                ✏️ Modifier
                             </a>
-                             </a>
-            {{ include('produit/_delete_form.html.twig') }}
-        </div>
+                             <a href="#" class="btn btn-danger btn-sm" title="Supprimer"
+                               onclick="event.preventDefault(); if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) { 
+                                   document.getElementById('delete-form-{{ produit.id }}').submit(); }">
+                                🗑️ Supprimer
+                            </a>
+                            <form id="delete-form-{{ produit.id }}" method="post" action="{{ path('produit_delete', {'id': produit.id}) }}" style="display: none;">
+                                <!-- Token CSRF pour sécuriser la requête -->
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ produit.id) }}">
+                            </form>
+
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7" class="text-center text-muted">
+                        <td colspan="8" class="text-center text-muted">
                             Aucun produit trouvé. Cliquez sur "Ajouter un Nouveau Produit" pour commencer.
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <!-- Bouton pour créer un nouveau produit -->
+        <div class="text-end mb-4">
+            <a href="{{ path('produit_new') }}" class="btn btn-primary btn-sm" title="Ajouter un produit">
+                ➕ Ajouter
+            </a>
+        </div>
     </div>
 </div>
-
-<!-- Styles personnalisés -->
-<style>
-    .container {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-        color: #333;
-        font-weight: bold;
-    }
-
-    .table {
-        margin-top: 20px;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-info {
-        color: #fff;
-        background-color: #17a2b8;
-        border-color: #17a2b8;
-    }
-
-    .btn-warning {
-        color: #fff;
-        background-color: #ffc107;
-        border-color: #ffc107;
-    }
-</style>
 {% endblock %}

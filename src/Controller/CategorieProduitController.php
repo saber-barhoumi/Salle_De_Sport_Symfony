@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Produit;  // Ajoutez cette ligne pour importer l'entité Produit
+use App\Entity\Produit;  
 use App\Entity\CategorieProduit;
 use App\Form\CategorieProduitType;
 use App\Repository\CategorieProduitRepository;
@@ -26,15 +26,13 @@ final class CategorieProduitController extends AbstractController
     #[Route('/new', name: 'categorie_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     { 
-         // Ajouter un message flash pour informer l'utilisateur
         $this->addFlash('success', 'Catégorie ajoutée avec succès !');
 
         $categorieProduit = new CategorieProduit();
         $form = $this->createForm(CategorieProduitType::class, $categorieProduit);
         $form->handleRequest($request);
 
-        // Ajoutez un dump() ici pour vérifier le contenu du formulaire
-    dump($form->createView()); // Ceci vous montre la vue du formulaire
+    dump($form->createView()); 
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($categorieProduit);
@@ -74,17 +72,14 @@ final class CategorieProduitController extends AbstractController
         ]);
     }
     
-    // Si vous voulez supprimer un objet CategorieProduit/**
     #[Route('/{id}/delete', name: 'categorie_produit_delete', methods: ['POST'])]
     public function delete(Request $request, CategorieProduit $categorieProduit, EntityManagerInterface $entityManager): Response
     {
-        // Vérification du token CSRF
         if ($this->isCsrfTokenValid('delete' . $categorieProduit->getId(), $request->request->get('_token'))) {
             $entityManager->remove($categorieProduit);
             $entityManager->flush();
         }
     
-        // Redirection après suppression
         return $this->redirectToRoute('categorie_produit_index');
     }
 

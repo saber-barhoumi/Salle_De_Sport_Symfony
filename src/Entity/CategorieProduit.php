@@ -24,7 +24,8 @@ class CategorieProduit
     /**
      * @var Collection<int, Produit>
      */
-    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'CategorieProduit')]
+    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'CategorieProduit', cascade: ['remove'])]
+
     private Collection $produits;
 
     public function __construct()
@@ -43,7 +44,7 @@ class CategorieProduit
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 

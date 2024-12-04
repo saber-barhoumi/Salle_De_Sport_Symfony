@@ -1,90 +1,18 @@
+{# templates/produit/new.html.twig #}
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer un Nouveau Produit{% endblock %}
+{% block title %}Créer un Produit{% endblock %}
 
 {% block body %}
-       <div class="form-group mb-4">
-        <label class="form-label" for="Description">
-            📝 {{ form_label(form.description, 'Description') }}
-        </label>
-        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez les caractéristiques du produit'}}) }}
-        <div class="form-text text-muted">
-            Fournissez des détails comme les dimensions, les matériaux...
-        </div>
-        {{ form_errors(form.description) }}
-    </div>
+    <h1>Créer un Produit</h1>
 
-    <div class="form-group mb-4">
-        <label class="form-label" for="image">
-            🖼️ {{ form_label(form.image, 'Image du Produit') }}
-        </label>
-        {{ form_widget(form.image, {'attr': {'class': 'form-control', 'accept': 'image/*'}}) }}
-        <div class="form-text text-muted">
-            Téléchargez une image de haute qualité pour ce produit.
-        </div>
-        {{ form_errors(form.image) }}
-    </div>
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.image) }}
+        {{ form_row(form.tags) }} {# Affichage du champ de tags #}
 
-    <div class="form-group mb-4">
-        <label class="form-label" for="prix">
-            💵 {{ form_label(form.prix, 'Prix (en Dinars)') }}
-        </label>
-        {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Ex : 99.99'}}) }}
-        {{ form_errors(form.prix) }}
-    </div>
-
-   <div class="form-group mb-4">
-    <label class="form-label" for="quantiteStock">
-        📦 {{ form_label(form.quantiteStock, 'Quantité en Stock') }}
-    </label>
-    {{ form_widget(form.quantiteStock, {'attr': {'class': 'form-control', 'placeholder': 'Ex : 50'}}) }}
-    {{ form_errors(form.quantiteStock) }}
-</div>
-
-    <div class="form-group mb-4">
-        <label class="form-label" for="CategorieProduit">
-            🏷️ {{ form_label(form.CategorieProduit, 'Catégorie du Produit') }}
-        </label>
-        {{ form_widget(form.CategorieProduit, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(form.CategorieProduit) }}
-    </div>
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-success btn-lg mt-3">
-                <a href="{{ path('produit_new') }}" class="btn btn-secondary btn-lg mt-3">
-
-            💾 Enregistrer le Produit
-        </button>
-        <a href="{{ path('produit_index') }}" class="btn btn-secondary btn-lg mt-3">
-            ⬅️ Retour à la Liste
-        </a>
-    </div>
-{{ form_end(form) }}
-
-
-
-<!-- Styles personnalisés pour embellir -->
-<style>
-    .container {
-        background-color: #f9f9f9;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-        color: #333;
-        font-weight: bold;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
-    }
-
-    .btn-success:hover {
-        background-color: #218838;
-    }
-</style>
+        <button class="btn btn-primary">Créer</button>
+    {{ form_end(form) }}
 {% endblock %}

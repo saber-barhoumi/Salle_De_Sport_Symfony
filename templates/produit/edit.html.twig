@@ -4,16 +4,27 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="mb-4 text-center">
+    <h1 class="mb-4 text-center text-primary">
         ✏️ Modifier le Produit
     </h1>
 
-    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
-        {{ form_widget(form) }}
-        <div class="mt-4 text-center">
-            <button type="submit" class="btn btn-success">💾 Enregistrer</button>
-            <a href="{{ path('produit_index') }}" class="btn btn-outline-secondary">↩ Retour</a>
-        </div>
-    {{ form_end(form) }}
+    <div class="card shadow-sm p-4">
+        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+            <div class="form-group">
+                {{ form_widget(form) }}
+            </div>
+            <div class="mt-4 text-center d-flex justify-content-center gap-3">
+                <!-- Bouton Enregistrer -->
+                <button type="submit" class="btn btn-primary" style="width: 150px;">
+                    💾 Enregistrer
+                </button>
+
+                <!-- Bouton Retour -->
+                <a href="{{ path('produit_index') }}" class="btn btn-secondary" style="width: 150px;">
+                    ↩ Retour
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
 </div>
 {% endblock %}

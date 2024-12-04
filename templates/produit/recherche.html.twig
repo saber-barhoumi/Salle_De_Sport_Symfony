@@ -1,0 +1,22 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Recherche avancée{% endblock %}
+
+{% block body %}
+    <h1>Recherche Avancée</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.CategorieProduit) }}
+        <button type="submit">Rechercher</button>
+    {{ form_end(form) }}
+
+    <h2>Résultats</h2>
+    <ul>
+        {% for produit in produits %}
+            <li>{{ produit.nom }} - {{ produit.CategorieProduit.nom }}</li>
+        {% else %}
+            <li>Aucun produit trouvé.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

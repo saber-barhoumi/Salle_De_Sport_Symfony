@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,18 +22,37 @@ class Produit
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $image = null;
+    // Changez ce champ pour un tableau d'images
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $image;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $prix = null;
 
-    #[ORM\Column(type: 'integer')] // Mapping added
+    #[ORM\Column(type: 'integer')]
     private ?int $quantiteStock = null;
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CategorieProduit $CategorieProduit = null;
+
+    /**
+     * @var Collection<int, Cart>
+     */
+    #[ORM\ManyToMany(targetEntity: Cart::class, mappedBy: 'produits')]
+    private Collection $carts;
+
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'produits')]
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->carts = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -67,7 +88,7 @@ class Produit
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(string $image): self
     {
         $this->image = $image;
 
@@ -91,7 +112,7 @@ class Produit
         return $this->quantiteStock;
     }
 
-    public function setQuantiteStock(int $quantiteStock): static
+    public function setQuantiteStock(int $quantiteStock): self
     {
         $this->quantiteStock = $quantiteStock;
 
@@ -103,9 +124,63 @@ class Produit
         return $this->CategorieProduit;
     }
 
-    public function setCategorieProduit(?CategorieProduit $CategorieProduit): static
+    public function setCategorieProduit(?CategorieProduit $CategorieProduit): self
     {
         $this->CategorieProduit = $CategorieProduit;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cart>
+     */
+    public function getCarts(): Collection
+    {
+        return $this->carts;
+    }
+
+    public function addCart(Cart $cart): static
+    {
+        if (!$this->carts->contains($cart)) {
+            $this->carts->add($cart);
+            $cart->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCart(Cart $cart): static
+    {
+        if ($this->carts->removeElement($cart)) {
+            $cart->removeProduit($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        if ($this->tags->removeElement($tag)) {
+            $tag->removeProduit($this);
+        }
 
         return $this;
     }

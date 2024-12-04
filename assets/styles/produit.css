@@ -1,36 +1,112 @@
-/* styles/produit.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+/* Style global du tableau */
+.table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #222222; /* Couleur de fond du tableau */
+    color: #fff; /* Couleur du texte */
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+/* En-tête du tableau */
+.table th {
+    background-color: #333333; /* Couleur de fond de l'en-tête */
+    color: #fff; /* Couleur du texte de l'en-tête */
+    padding: 10px;
+    text-align: left;
+    font-size: 16px;
 }
 
-.product-card {
-    border: 1px solid #ddd;
+/* Lignes du tableau */
+.table td {
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #444444; /* Ajout d'une bordure sous chaque ligne */
+}
+
+/* Lignes impaires avec un fond clair */
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Couleur claire pour les lignes impaires */
+}
+
+/* Lignes paires avec un fond plus sombre */
+.table-striped tbody tr:nth-child(even) {
+    background-color: #333333; /* Couleur sombre pour les lignes paires */
+}
+
+/* Style des boutons dans la dernière colonne */
+.table .btn {
+    padding: 5px 10px;
+    margin: 0 5px;
     border-radius: 5px;
-    padding: 15px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.product-card img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-.product-card .title {
-    font-size: 1.2em;
-    margin: 10px 0;
-}
-
-.product-card .price {
-    color: #28a745;
+    text-decoration: none;
     font-weight: bold;
+    color: #fff;
+}
+
+/* Bouton "Voir" (bleu) */
+.table .btn-view {
+    background-color: #00c4cc;
+}
+
+/* Bouton "Modifier" (jaune) */
+.table .btn-edit {
+    background-color: #ffcc00;
+}
+
+/* Bouton "Supprimer" (rouge) */
+.table .btn-delete {
+    background-color: #f44336;
+}
+
+/* Ajout d'un bouton "Ajouter un Nouveau Produit" */
+.table .btn-add {
+    background-color: #d32f2f;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Changement de couleur au survol des boutons */
+.table .btn:hover {
+    opacity: 0.8;
+}
+
+/* Style de la ligne de tableau lorsque l'on survole */
+.table tbody tr:hover {
+    background-color: #444444; /* Survol de la ligne */
+}
+
+/* Style pour les images dans les colonnes d'image */
+.table img {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Style général pour le texte du tableau */
+.table td, .table th {
+    font-size: 14px;
+    padding: 10px;
+}
+/* Ensure that the contact information is displayed in a row */
+.topbar-contact {
+    display: flex;
+    align-items: center; /* Vertically center the icons and text */
+}
+
+/* Space out the email and phone sections */
+.email, .phone {
+    margin-right: 20px; /* Add some space between the two */
+}
+
+.email i, .phone i {
+    margin-right: 5px; /* Add space between the icon and the text */
 }

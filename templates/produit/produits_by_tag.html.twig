@@ -1,0 +1,28 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Produits pour le tag {{ tag.nom }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Produits liés au tag : <span class="text-primary">{{ tag.nom }}</span></h1>
+
+    {% if produits is empty %}
+        <p class="text-muted">Aucun produit n'est lié à ce tag pour le moment.</p>
+    {% else %}
+        <div class="row">
+            {% for produit in produits %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{{ asset('uploads/images/' ~ produit.image) }}" class="card-img-top" alt="{{ produit.nom }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ produit.nom }}</h5>
+                            <p class="card-text">{{ produit.description|slice(0, 100) ~ '...' }}</p>
+                            <a href="{{ path('produit_show', {id: produit.id}) }}" class="btn btn-primary">Voir Détails</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

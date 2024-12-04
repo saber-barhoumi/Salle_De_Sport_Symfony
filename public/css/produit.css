@@ -1,0 +1,109 @@
+/*
+/* Fond de la page complet */
+body {
+    background-color: #ffffff; /* Assurer que tout le fond de la page est blanc */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #000;
+}
+
+/* Style global du tableau */
+.table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #ffffff; /* Fond blanc pour le tableau */
+    color: #000; /* Texte en noir */
+}
+
+/* En-tête du tableau */
+.table th {
+    background-color: #f2f2f2; /* Couleur de fond claire pour l'en-tête */
+    color: #000; /* Couleur du texte de l'en-tête */
+    padding: 10px;
+    text-align: left;
+    font-size: 16px;
+}
+
+/* Lignes du tableau */
+.table td {
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #dddddd;
+}
+
+/* Lignes impaires avec un fond clair */
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f9f9f9; /* Fond clair pour les lignes impaires */
+}
+
+/* Lignes paires avec un fond légèrement plus sombre */
+.table-striped tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Fond blanc pour les lignes paires */
+}
+
+/* Boutons dans la dernière colonne */
+.table .btn {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Bouton Voir */
+.table .btn-view {
+    background-color: #00c4cc;
+}
+
+/* Bouton Modifier */
+.table .btn-edit {
+    background-color: #ffcc00;
+}
+
+/* Bouton Supprimer */
+.table .btn-delete {
+    background-color: #f44336;
+}
+
+/* Bouton Ajouter un Nouveau Produit */
+.table .btn-add {
+    background-color: #d32f2f;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Change de couleur au survol des boutons */
+.table .btn:hover {
+    opacity: 0.8;
+}
+
+/* Ligne du tableau survolée */
+.table tbody tr:hover {
+    background-color: #f1f1f1; /* Fond légèrement plus clair au survol */
+}
+
+/* Style pour les images dans les colonnes d'image */
+.table img {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Style général pour le texte du tableau */
+.table td, .table th {
+    font-size: 14px;
+    padding: 10px;
+}
+*/
