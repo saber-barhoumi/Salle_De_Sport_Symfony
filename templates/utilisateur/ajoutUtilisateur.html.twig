@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un utilisateur{% endblock %}
+
+{% block body %}
+<h1 class="my-4 text-center">Ajouter un nouveau utilisateur</h1>
+
+<div class="container">
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    
+    <div class="mb-3">
+        {{ form_label(form.nom, 'Nom de utilisateur', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.prenom, 'Prenom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.prenom) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.mot_de_passe, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.mot_de_passe, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.mot_de_passe) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.age, 'Age', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.age, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.age) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.genre, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.genre, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.genre) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.email) }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form_label(form.statut, 'Statut', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.statut) }}
+    </div>
+    
+    
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success">Créer l'utilisateur</button>
+    </div>
+    {{ form_end(form) }}
+    
+    <div class="text-center mt-4">
+        <a href="{{ path('app_utilisateur') }}" class="btn btn-secondary">Retour à la liste des utilisateurs</a>
+    </div>
+</div>
+{% endblock %}
