@@ -17,46 +17,55 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use App\Entity\Tag;
 use App\Repository\TagRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use App\Service\CartService;  // Si vous avez un service pour gérer le panier
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 #[Route('/produit')]
 class ProduitController extends AbstractController
 {
-    #[Route('/frontproduit', name: 'frontproduit_index')]
-    public function AFFICHERFRONT(Request $request, EntityManagerInterface $em): Response
-    {
-        // Récupérer tous les produits et tous les tags
-        $produits = $em->getRepository(Produit::class)->findAll();
-        $tags = $em->getRepository(Tag::class)->findAll();
-
-            
-        // Créer le formulaire de recherche
-        $form = $this->createForm(AdvancedSearchType::class);
-        $form->handleRequest($request);  // Traiter la requête avec le formulaire
-        
-        // Vérifier si le formulaire a été soumis et est valide
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $nom = $data['nom'] ?? null;
-            $categorie = $data['CategorieProduit'] ?? null;
     
-            // Filtrer les produits en fonction des données du formulaire (si elles existent)
-            $produits = $em->getRepository(Produit::class)->findByCriteria($nom, $categorie);
-        }
     
-        // Rendu de la réponse avec le formulaire et les produits filtrés
-        return $this->render('produit/produitFront.html.twig', [
-            'form' => $form->createView(),
-            'produits' => $produits,
-            'tags' => $tags, // Ajouter les tags ici
-
+   #[Route('/frontproduit', name: 'frontproduit_index')]
+public function AFFICHERFRONT(Request $request, EntityManagerInterface $em, SessionInterface $session): Response
+{   
+    if (!$session->has('cart')) {
+        $session->set('cart', [
+            'produits' => [], // Aucun produit au départ
+            'total' => 0,     // Total à 0
         ]);
+    }
+    // Récupérer tous les produits et tous les tags
+    $produits = $em->getRepository(Produit::class)->findAll();
+    $tags = $em->getRepository(Tag::class)->findAll();
 
-    return $this->render('produit/produitFront.html.twig', [
-        'produits' => $produits,
-    ]);
+    // Récupérer le panier depuis la session
+    $cart = $session->get('cart', []);
+
+    // Créer le formulaire de recherche
+    $form = $this->createForm(AdvancedSearchType::class);
+    $form->handleRequest($request);  // Traiter la requête avec le formulaire
     
+    // Vérifier si le formulaire a été soumis et est valide
+    if ($form->isSubmitted() && $form->isValid()) {
+        $data = $form->getData();
+        $nom = $data['nom'] ?? null;
+        $categorie = $data['CategorieProduit'] ?? null;
+
+        // Filtrer les produits en fonction des données du formulaire (si elles existent)
+        $produits = $em->getRepository(Produit::class)->findByCriteria($nom, $categorie);
+    }
+
+    // Rendu de la réponse avec le formulaire et les produits filtrés
+    return $this->render('produit/produitFront.html.twig', [
+        'form' => $form->createView(),
+        'produits' => $produits,
+        'tags' => $tags, // Ajouter les tags ici
+        'cart' => $cart,
+    ]);
+
+    
+      
  }
  #[Route('/new', name: 'produit_new', methods: ['GET', 'POST'])]
  public function new(Request $request, EntityManagerInterface $em): Response

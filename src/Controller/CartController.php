@@ -1,81 +1,82 @@
 <?php
-// src/Controller/CartController.php
 namespace App\Controller;
 
 use App\Entity\Cart;
-use App\Entity\Product;
-use App\Entity\Order;
-use App\Service\CartService;
+use App\Entity\Produit;
+use App\Repository\CartRepository;
+use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends AbstractController
 {
-    #[Route('/cart', name: 'cart_show')]
-    public function showCart(EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
-        $cart = $entityManager->getRepository(Cart::class)->findOneBy(['user' => $user]);
+    private $cartRepository;
+    private $produitRepository;
+    private $entityManager;
 
+    public function __construct(CartRepository $cartRepository, ProduitRepository $produitRepository, EntityManagerInterface $entityManager)
+    {
+        $this->cartRepository = $cartRepository;
+        $this->produitRepository = $produitRepository;
+        $this->entityManager = $entityManager;
+    }
+
+    #[Route('/cart', name: 'cart_index')]
+    public function index(EntityManagerInterface $entityManager): Response
+    {
+        // Trouver le panier actuel (si disponible)
+        $cart = $entityManager->getRepository(Cart::class)->findOneBy(['utilisateur' => $this->getUser()]);
+
+        // Si aucun panier, en créer un
         if (!$cart) {
             $cart = new Cart();
-            $cart->setUser($user);
+            $cart->setTotal(0);
             $entityManager->persist($cart);
             $entityManager->flush();
         }
 
-        return $this->render('cart/show.html.twig', [
+        // Trouver tous les produits disponibles
+        $produitsDisponibles = $this->produitRepository->findAll();
+
+        return $this->render('cart/index.html.twig', [
             'cart' => $cart,
+            'produitsDisponibles' => $produitsDisponibles,  // Passer les produits disponibles
         ]);
     }
 
     #[Route('/cart/add/{id}', name: 'cart_add')]
-    public function addToCart(Product $product, CartService $cartService, EntityManagerInterface $entityManager): Response
+    public function addProduct(int $id, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
-        $cart = $entityManager->getRepository(Cart::class)->findOneBy(['user' => $user]);
+        // Trouver le produit à ajouter au panier
+        $produit = $entityManager->getRepository(Produit::class)->find($id);
+        $cart = $entityManager->getRepository(Cart::class)->findOneBy(['utilisateur' => $this->getUser()]);
 
-        if (!$cart) {
-            $cart = new Cart();
-            $cart->setUser($user);
+        if ($cart && $produit) {
+            $cart->addProduit($produit);
+            $cart->setTotal($cart->calculateTotal());
             $entityManager->persist($cart);
+            $entityManager->flush();
         }
 
-        $cartService->addToCart($cart, $product);
-
-        return $this->redirectToRoute('cart_show');
+        return $this->redirectToRoute('cart_index');
     }
 
-    #[Route('/cart/checkout', name: 'cart_checkout')]
-    public function checkout(Cart $cart, EntityManagerInterface $entityManager): Response
+    #[Route('/cart/remove/{id}', name: 'cart_remove')]
+    public function removeProduct(int $id, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
+        // Trouver le produit à retirer du panier
+        $produit = $entityManager->getRepository(Produit::class)->find($id);
+        $cart = $entityManager->getRepository(Cart::class)->findOneBy(['utilisateur' => $this->getUser()]);
 
-        $order = new Order();
-        $order->setUser($user);
-        $order->setProducts($cart->getProducts());
-        $order->setTotal($cart->getTotal());
-        $entityManager->persist($order);
+        if ($cart && $produit) {
+            $cart->removeProduit($produit);
+            $cart->setTotal($cart->calculateTotal());
+            $entityManager->persist($cart);
+            $entityManager->flush();
+        }
 
-        // Vider le panier
-        $cart->getProducts()->clear();
-        $cart->setTotal(0);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('order_history');
-    }
-
-    #[Route('/orders', name: 'order_history')]
-    public function orderHistory(EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
-        $orders = $entityManager->getRepository(Order::class)->findBy(['user' => $user]);
-
-        return $this->render('order/history.html.twig', [
-            'orders' => $orders,
-        ]);
+        return $this->redirectToRoute('cart_index');
     }
 }

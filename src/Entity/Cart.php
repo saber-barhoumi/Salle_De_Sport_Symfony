@@ -6,6 +6,8 @@ use App\Repository\CartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Utilisateur;
+
 
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 class Cart
@@ -23,6 +25,9 @@ class Cart
      */
     #[ORM\ManyToMany(targetEntity: Produit::class, inversedBy: 'carts')]
     private Collection $produits;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Utilisateur $utilisateur = null;
 
     public function __construct()
     {
@@ -69,4 +74,30 @@ class Cart
 
         return $this;
     }
+
+    public function getUtilisateur(): ?utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+    public function getStoredTotal(): ?float
+    {
+        return $this->total;
+    }
+    
+    public function calculateTotal(): float
+    {
+        return array_reduce(
+            $this->produits->toArray(),
+            fn($total, Produit $produit) => $total + $produit->getPrix(),
+            0
+        );
+    }
+    
 }

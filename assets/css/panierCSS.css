@@ -84,3 +84,23 @@
     background-color: #3498db;
     color: #fff;
 }
+
+
+
+
+
+.cart-container {
+    display: none; /* Panier caché par défaut */
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: white;
+    width: 300px;
+    height: 100%;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+

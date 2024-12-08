@@ -1,0 +1,16 @@
+
+{% for fav in favoris %}
+    <tr>
+        <td>{{ fav.produit.nom }}</td>
+        <td>{{ fav.produit.prix }}€</td>
+        <td>
+            <a href="{{ path('supprimer_favoris', {id: fav.produit.id}) }}" class="text-danger">
+                <i class="fas fa-trash-alt"></i> Retirer
+            </a>
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="3">Aucun produit dans vos favoris.</td>
+    </tr>
+{% endfor %}

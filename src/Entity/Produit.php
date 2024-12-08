@@ -48,10 +48,17 @@ class Produit
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'produits')]
     private Collection $tags;
 
+    /**
+     * @var Collection<int, Favoris>
+     */
+    #[ORM\OneToMany(targetEntity: Favoris::class, mappedBy: 'produit')]
+    private Collection $favoris;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +187,36 @@ class Produit
     {
         if ($this->tags->removeElement($tag)) {
             $tag->removeProduit($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favoris>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+            $favori->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): static
+    {
+        if ($this->favoris->removeElement($favori)) {
+            // set the owning side to null (unless already changed)
+            if ($favori->getProduit() === $this) {
+                $favori->setProduit(null);
+            }
         }
 
         return $this;

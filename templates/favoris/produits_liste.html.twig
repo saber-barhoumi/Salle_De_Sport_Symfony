@@ -1,0 +1,19 @@
+{# templates/favoris/produits_liste.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Tous les produits{% endblock %}
+
+{% block body %}
+    <h1>Tous les produits</h1>
+
+    <ul>
+        {% for produit in produits %}
+            <li>
+                {{ produit.nom }} - {{ produit.prix }} €
+                <a href="{{ path('ajouter_favoris', {'id': produit.id}) }}" class="btn btn-primary">Ajouter aux favoris</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

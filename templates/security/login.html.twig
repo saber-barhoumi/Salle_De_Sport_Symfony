@@ -1,0 +1,19 @@
+{# templates/security/login.html.twig #}
+
+<h1>Connexion</h1>
+
+<form action="{{ path('app_login') }}" method="post">
+    <label for="username">Nom d'utilisateur</label>
+    <input type="text" id="username" name="_username" value="{{ last_username }}" required>
+
+    <label for="password">Mot de passe</label>
+    <input type="password" id="password" name="_password" required>
+
+    <button type="submit">Se connecter</button>
+</form>
+
+{% if error %}
+    <div class="error">
+        <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+    </div>
+{% endif %}

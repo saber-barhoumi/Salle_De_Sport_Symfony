@@ -1,0 +1,41 @@
+{% extends 'base2.html.twig' %}
+
+{% block body %}
+    <h1>Panier</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in cart.produits %}
+                <tr>
+                    <td>{{ produit.nom }}</td>
+                    <td>{{ produit.prix }}€</td>
+                    <td>
+                        <a href="{{ path('cart_remove', {id: produit.id}) }}">Retirer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Aucun produit dans le panier.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>Total: {{ cart.total }}€</p>
+
+    <h2>Produits disponibles</h2>
+    <ul>
+        {% for produit in produitsDisponibles %}
+            <li>
+                {{ produit.nom }} - {{ produit.prix }}€
+                <a href="{{ path('cart_add', {id: produit.id}) }}">Ajouter au panier</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

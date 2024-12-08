@@ -256,3 +256,22 @@ function loadProduitsByTag(tagId) {
 }
 
     
+
+
+//panier
+
+
+document.getElementById('cart-icon').addEventListener('click', function() {
+    const cartContainer = document.getElementById('cart-container');
+    if (cartContainer.classList.contains('show')) {
+        cartContainer.classList.remove('show'); // Masquer le panier
+        setTimeout(() => {
+            cartContainer.style.display = 'none';
+        }, 300); // Correspond à la durée de la transition
+    } else {
+        cartContainer.style.display = 'block';
+        setTimeout(() => {
+            cartContainer.classList.add('show'); // Afficher le panier avec effet
+        }, 10); // Délai minime pour appliquer la classe après l'affichage
+    }
+});
