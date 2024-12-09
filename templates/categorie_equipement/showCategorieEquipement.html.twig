@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category List{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center font-weight-bold mb-4">Category List</h1>
+
+    {% if categoryList is empty %}
+        <p class="text-center text-danger font-weight-bold">
+            No categories found.
+        </p>
+    {% else %}
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="font-weight-bold">ID</th>
+                    <th class="font-weight-bold">Category Name</th>
+                    <th class="font-weight-bold text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categoryList %}
+                    <tr>
+                        <td class="font-weight-bold">{{ category.id }}</td>
+                        <td>{{ category.nom }}</td>
+                        <td class="text-center">
+                            <a href="{{ path('app_edit_categorie_equipement', { id: category.id }) }}"
+                               class="btn btn-sm btn-primary font-weight-bold">
+                                Edit
+                            </a>
+                            <a href="{{ path('app_delete_categorie_equipement', { id: category.id }) }}"
+                               class="btn btn-sm btn-danger font-weight-bold"
+                               onclick="return confirm('Are you sure you want to delete this category?');">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Gym Template">
+    <meta name="keywords" content="Gym, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Equipment List</title>
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{{ asset('css2/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css2/font-awesome.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css2/style.css') }}" type="text/css">
+
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .section-title span {
+            display: block;
+            color: #e74c3c; /* Luxurious red color */
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: #e74c3c; /* Luxurious red color */
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #2d2d2d, #4b4b4b);
+            border: 1px solid #555;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.2), 0 4px 15px rgba(255, 0, 0, 0.4); /* Red glow */
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.6), 0 8px 30px rgba(255, 255, 255, 0.3); /* Enhanced glow */
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c; /* Luxurious red color */
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 15px;
+            color: #e0e0e0;
+        }
+
+        .card-text strong {
+            color: #fff;
+        }
+
+        .equipment-list-section {
+            padding: 60px 0;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: auto;
+        }
+
+        /* Add glow effect to section title */
+        .section-title span,
+        .section-title h2 {
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8), 0 0 12px rgba(255, 255, 255, 0.5); /* Red glow */
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .section-title h2 {
+                font-size: 24px;
+            }
+
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Equipment List Section Begin -->
+    <section class="equipment-list-section spad">
+        <div class="container">
+            <div class="section-title text-center">
+                <span>Our Equipments</span>
+                <h2>Explore Our Equipment</h2>
+            </div>
+
+            {% if equipementList is empty %}
+                <p class="text-center text-danger font-weight-bold">
+                    No equipment found.
+                </p>
+            {% else %}
+                <div class="row">
+                    {% for equipement in equipementList %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card mb-4">
+                                <!-- Equipment Photo -->
+                                {% if equipement.photo %}
+                                    <img src="{{ asset('uploads/equipements/' ~ equipement.photo) }}" alt="{{ equipement.nom }}" class="card-img-top">
+                                {% else %}
+                                    <img src="{{ asset('images/default.jpg') }}" alt="Default Image" class="card-img-top">
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <!-- Equipment Name -->
+                                    <h5 class="card-title">{{ equipement.nom }}</h5>
+
+                                    <!-- Category -->
+                                    <p class="card-text">
+                                        <strong>Category:</strong>
+                                        {% if equipement.equipement %}
+                                            {{ equipement.equipement.nom }}
+                                        {% else %}
+                                            No category
+                                        {% endif %}
+                                    </p>
+
+                                    <!-- Description -->
+                                    <p class="card-text">
+                                        <strong>Description:</strong> {{ equipement.descriptions|slice(0, 100) ~ '...' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    <!-- Equipment List Section End -->
+
+    <!-- Js Plugins -->
+    <script src="{{ asset('js2/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('js2/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js2/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('js2/main.js') }}"></script>
+
+</body>
+
+</html>
+
