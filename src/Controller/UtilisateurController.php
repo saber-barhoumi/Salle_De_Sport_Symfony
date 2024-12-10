@@ -22,15 +22,6 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
-    #[Route('/afficheUtilisateurs', name: 'app_afficheUtilisateurs')]
-    public function afficheUtilisateur(UtilisateurRepository $rep): Response
-    {
-        $utilisateurs =$rep->findAll();
-        return $this->render('utilisateur/index.html.twig', [
-            'utilisateurs' => $utilisateurs,
-        ]);
-    }
-
     #[Route('/ajoutUtilisateur', name: 'app_ajoutUtilisateur')]
     public function ajoutUtilisateur(ManagerRegistry $doctrine, Request $request): Response
     {
@@ -85,6 +76,21 @@ class UtilisateurController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/utilisateur/{id}', name: 'app_utilisateur_show')]
+public function showUtilisateur(UtilisateurRepository $rep, int $id): Response
+{
+    $utilisateur = $rep->find($id);
+
+    if (!$utilisateur) {
+        throw $this->createNotFoundException('Utilisateur non trouvé.');
+    }
+
+    return $this->render('utilisateur/showUser.html.twig', [
+        'utilisateur' => $utilisateur,
+    ]);
+}
+
     
 }
 

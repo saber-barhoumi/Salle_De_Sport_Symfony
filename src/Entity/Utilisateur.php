@@ -4,9 +4,13 @@ namespace App\Entity;
 
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface; // Importez l'interface
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface // Implémentez PasswordAuthenticatedUserInterface ici
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,7 +23,7 @@ class Utilisateur
     #[ORM\Column(length: 50)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)] // Modifiez la longueur pour un mot de passe haché plus long
     private ?string $mot_de_passe = null;
 
     #[ORM\Column]
@@ -28,7 +32,7 @@ class Utilisateur
     #[ORM\Column(length: 50)]
     private ?string $genre = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 50)]
@@ -36,6 +40,10 @@ class Utilisateur
 
     #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
     private ?TypeUtilisateur $TypeUtilisateur = null;
+
+
+    #[ORM\Column]
+    private bool $isVerified = false;
 
     public function getId(): ?int
     {
@@ -76,6 +84,11 @@ class Utilisateur
         $this->mot_de_passe = $mot_de_passe;
 
         return $this;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->mot_de_passe; // Retourne le mot de passe haché
     }
 
     public function getAge(): ?int
@@ -134,6 +147,48 @@ class Utilisateur
     public function setTypeUtilisateur(?TypeUtilisateur $TypeUtilisateur): static
     {
         $this->TypeUtilisateur = $TypeUtilisateur;
+
         return $this;
     }
+
+    public function getRoles(): array
+{
+    // Assurez-vous que le TypeUtilisateur est défini
+    if ($this->TypeUtilisateur === null) {
+        return ['ROLE_USER']; // Rôle par défaut si aucun TypeUtilisateur n'est défini
+    }
+
+    // Générer le rôle en fonction du TypeUtilisateur
+    $role = 'ROLE_' . strtoupper($this->TypeUtilisateur->getNom()); // Par exemple, ROLE_ADMIN, ROLE_EDITOR
+    return [$role];
+}
+
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+        // Supprimez les données sensibles ici si nécessaire
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function __construct()
+    {
+    $this->statut = 'Inactif';
+    }
+
 }
