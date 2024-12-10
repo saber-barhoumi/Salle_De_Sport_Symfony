@@ -31,6 +31,7 @@ class FavorisController extends AbstractController
             'produits' => $produits
         ]);
     }
+
     // Ajouter un produit aux favoris
     #[Route('/ajouter-favoris/{id}', name: 'ajouter_favoris')]
     public function ajouterAuxFavoris(Produit $produit, Security $security): RedirectResponse
@@ -100,4 +101,27 @@ class FavorisController extends AbstractController
 
         return $this->redirectToRoute('produit_show', ['id' => $produit->getId()]);
     }
+    
+    #[Route('/favoris/liste', name: 'liste_favoris')]
+    public function listeFavoris(FavorisRepository $favorisRepository, Security $security): JsonResponse
+    {
+        $user = $security->getUser();
+        $favoris = $favorisRepository->findBy(['utilisateur' => $user]);
+    
+        // Transformer les favoris en un tableau
+        $favorisData = array_map(function ($favori) {
+            return [
+                'id' => $favori->getProduit()->getId(),
+                'nom' => $favori->getProduit()->getNom(),
+                'prix' => $favori->getProduit()->getPrix(),
+                'description' => $favori->getProduit()->getDescription(),
+                'image' => $favori->getProduit()->getImage(),
+            ];
+        }, $favoris);
+    
+        return $this->json(['favoris' => $favorisData]);
+    }
+    
+    
+    
 }

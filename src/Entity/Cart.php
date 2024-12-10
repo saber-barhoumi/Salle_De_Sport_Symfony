@@ -30,9 +30,11 @@ class Cart
     private ?Utilisateur $utilisateur = null;
 
     public function __construct()
-    {
-        $this->produits = new ArrayCollection();
-    }
+{
+    $this->produits = new ArrayCollection();
+    $this->total = 0.0;  // Initialiser le total à 0.0
+}
+
 
     public function getId(): ?int
     {
@@ -63,10 +65,12 @@ class Cart
     {
         if (!$this->produits->contains($produit)) {
             $this->produits->add($produit);
+            $this->setTotal($this->calculateTotal());  // Mise à jour du total
         }
-
+    
         return $this;
     }
+    
 
     public function removeProduit(Produit $produit): static
     {
@@ -80,7 +84,7 @@ class Cart
         return $this->utilisateur;
     }
 
-    public function setUtilisateur(?utilisateur $utilisateur): static
+    public function setUtilisateur(?Utilisateur $utilisateur): static
     {
         $this->utilisateur = $utilisateur;
 

@@ -1,16 +1,30 @@
 
-{% for fav in favoris %}
-    <tr>
-        <td>{{ fav.produit.nom }}</td>
-        <td>{{ fav.produit.prix }}€</td>
-        <td>
-            <a href="{{ path('supprimer_favoris', {id: fav.produit.id}) }}" class="text-danger">
-                <i class="fas fa-trash-alt"></i> Retirer
-            </a>
-        </td>
-    </tr>
+{% if favoris is empty %}
+    <div class="alert alert-info" role="alert">
+        Aucun produit dans vos favoris.
+    </div>
 {% else %}
-    <tr>
-        <td colspan="3">Aucun produit dans vos favoris.</td>
-    </tr>
-{% endfor %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fav in favoris %}
+                <tr>
+                    <td>{{ fav.produit.nom }}</td>
+                    <td>{{ fav.produit.prix }}€</td>
+                    <td>
+                        <a href="{{ path('supprimer_favoris', {id: fav.produit.id}) }}" class="text-danger" onclick="return confirm('Êtes-vous sûr de vouloir retirer ce produit de vos favoris ?');">
+                            <i class="fas fa-trash-alt"></i> Retirer
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+

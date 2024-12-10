@@ -1,19 +1,69 @@
-{# templates/favoris/produits_liste.html.twig #}
+{% extends 'base2.html.twig' %}
 
-{% extends 'base.html.twig' %}
-
-{% block title %}Tous les produits{% endblock %}
+{% block title %}Liste des Produits{% endblock %}
 
 {% block body %}
-    <h1>Tous les produits</h1>
+    <div class="container">
+        <div class="row">
+            {% for produit in produits %}
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="{{ asset(produit.image) }}" alt="{{ produit.nom }}">
+                        <h3>{{ produit.nom }}</h3>
+                        <p>{{ produit.description }}</p>
+                        <p>{{ produit.prix }} TND</p>
+                        
+                        <!-- Boutons AJAX -->
+                        <button class="btn btn-primary add-to-favoris" data-id="{{ produit.id }}">Ajouter aux Favoris</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 
-    <ul>
-        {% for produit in produits %}
-            <li>
-                {{ produit.nom }} - {{ produit.prix }} €
-                <a href="{{ path('ajouter_favoris', {'id': produit.id}) }}" class="btn btn-primary">Ajouter aux favoris</a>
-            </li>
-        {% endfor %}
-    </ul>
+        <!-- Afficher la liste des favoris -->
+        <div id="favoris-list">
+            <!-- Liste des favoris sera injectée ici par AJAX -->
+        </div>
+        
+        <button id="show-favoris" class="btn btn-info">Voir les Favoris</button>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Ajouter un produit aux favoris avec AJAX
+            $('.add-to-favoris').on('click', function() {
+                var produitId = $(this).data('id');
+                
+                $.ajax({
+                    url: '/favoris/ajouter/' + produitId,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
+
+            // Afficher la liste des produits favoris avec AJAX
+            $('#show-favoris').on('click', function() {
+                $.ajax({
+                    url: '/favoris/liste',
+                    method: 'GET',
+                    success: function(response) {
+                        var favorisHtml = '<h3>Mes Favoris</h3><ul>';
+                        response.favoris.forEach(function(favori) {
+                            favorisHtml += '<li>' + favori.nom + ' - ' + favori.prix + ' TND</li>';
+                        });
+                        favorisHtml += '</ul>';
+                        $('#favoris-list').html(favorisHtml);
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
