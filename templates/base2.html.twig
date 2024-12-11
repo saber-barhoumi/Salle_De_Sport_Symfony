@@ -537,9 +537,14 @@
                     <div class="fs-widget">
                         <h4>Support</h4>
                         <ul>
-                            <li><a href="#">Login</a></li>
-                            <li><a href="#">My account</a></li>
-                            <li><a href="#">Subscribe</a></li>
+                            <li><a href="{{path('app_login')}}">Login</a></li>
+                            {% if app.user %}
+                                <li><a href="{{ path('app_utilisateur_show2', {id: app.user.id}) }}">My Account</a></li>
+                                <li><a href="{{ path('app_logout')}}">Logout</a></li>
+                            {% else %}
+                                <li><a href="#" onclick="alert('You don\'t have an account, please login.')">My Account</a></li>
+                                <li><a href="{{path('app_register')}}">Sign Up</a></li>
+                            {% endif %}
                             <li><a href="#">Contact</a></li>
                         </ul>
                     </div>

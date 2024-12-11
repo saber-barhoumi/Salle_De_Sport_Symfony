@@ -23,7 +23,7 @@ security:
             logout:
                 path: app_logout
                 # Optionnel : redirigez après la déconnexion
-                # target: app_homepage
+                target: app_home
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # Durée de vie du cookie (1 semaine)
@@ -32,8 +32,8 @@ security:
 
     # Contrôle d'accès (Access Control)
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN } # Accès à /admin limité aux administrateurs
-        - { path: ^/profile, roles: ROLE_USER } # Accès à /profile limité aux utilisateurs connectés
+        #- { path: ^/dashboard, roles: ROLE_ADMIN } # Accès à /admin limité aux administrateurs
+        #- { path: ^/home, roles: ROLE_USER } # Accès à /profile limité aux utilisateurs connectés
 
 when@test:
     security:

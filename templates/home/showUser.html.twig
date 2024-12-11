@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'base2.html.twig' %}
 
 {% block title %}Détails de l'utilisateur{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
-        <h1 class="text-center text-primary mb-4">Profile de l'admin</h1>
+        <h1 class="text-center text-primary mb-4">Profile de l'utilisateur</h1>
         
         <div class="card shadow-lg p-4">
             <div class="card-body">
@@ -24,7 +24,7 @@
                         </tr>
                         <tr>
                             <th scope="row">Mot de passe</th>
-                            <td>**************</td>
+                            <td>*****************</td>
                         </tr>
                         <tr>
                             <th scope="row">Âge</th>
@@ -52,7 +52,7 @@
         </div>
 
         <div class="text-center mt-4">
-            <a href="{{ path('app_utilisateur') }}" class="btn btn-secondary">Retour à la liste</a>
+            <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour à HOME</a>
         </div>
     </div>
 {% endblock %}

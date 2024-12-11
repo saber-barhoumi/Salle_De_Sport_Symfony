@@ -189,6 +189,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface /
     public function __construct()
     {
     $this->statut = 'Inactif';
-    }
-
+    $this->typeUtilisateur = null; // Ou assignez un TypeUtilisateur par défaut.
+}
+    
+   
 }

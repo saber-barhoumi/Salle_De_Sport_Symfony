@@ -29,12 +29,12 @@
                         <td>{{ utilisateur.id }}</td>
                         <td>{{ utilisateur.nom}}</td>
                         <td>{{ utilisateur.prenom }}</td>
-                        <td>{{ utilisateur.motdepasse }}</td>
+                        <td>****************</td>
                         <td>{{ utilisateur.age }}</td>
                         <td>{{ utilisateur.genre }}</td>
                         <td>{{ utilisateur.email }}</td>
                         <td>{{ utilisateur.statut }}</td>
-                        <td>{{ utilisateur.TypeUtilisateur ? utilisateur.TypeUtilisateur.nom : N/A }}</td>
+                        <td>{{ utilisateur.TypeUtilisateur is not null ? utilisateur.TypeUtilisateur.nom : 'USER' }}</td>
                         <td>
                             <a href="{{ path('app_ModifUtilisateur', { id: utilisateur.id }) }}" class="btn btn-sm btn-warning">Modifier</a>
                             <a href="{{ path('app_SuppUtilisateur', { id: utilisateur.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
