@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+{% block title %}Stats des Utilisateurs{% endblock %}
+
+
+{% block body %}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+
+        <!-- Répartition des Utilisateurs par Tranche d'Âge -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Répartition par Tranche d'Âge</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tranche d'Âge</th>
+                            <th>Nombre d'Utilisateurs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in utilisateursParAge %}
+                            <tr>
+                                <td>{{ stat.trancheAge }}</td>
+                                <td>{{ stat.nombreUtilisateurs }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Répartition des Utilisateurs par Genre -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Répartition par Genre</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Genre</th>
+                            <th>Nombre d'Utilisateurs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in utilisateursParGenre %}
+                            <tr>
+                                <td>{{ stat.genre }}</td>
+                                <td>{{ stat.nombreUtilisateurs }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Graphique Répartition par Tranche d'Âge -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Graphique - Répartition par Tranche d'Âge</h6>
+                <canvas id="age-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Graphique Répartition par Genre -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Graphique - Répartition par Genre</h6>
+                <canvas id="genre-chart"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Graphique Répartition par Tranche d'Âge
+    var ageCtx = document.getElementById('age-chart').getContext('2d');
+    var ageChart = new Chart(ageCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for stat in utilisateursParAge %}
+                    "{{ stat.trancheAge }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Nombre d\'Utilisateurs',
+                data: [
+                    {% for stat in utilisateursParAge %}
+                        {{ stat.nombreUtilisateurs }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Graphique Répartition par Genre
+    var genreCtx = document.getElementById('genre-chart').getContext('2d');
+    var genreChart = new Chart(genreCtx, {
+        type: 'pie',
+        data: {
+            labels: [
+                {% for stat in utilisateursParGenre %}
+                    "{{ stat.genre }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for stat in utilisateursParGenre %}
+                        {{ stat.nombreUtilisateurs }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', 
+                    'rgba(54, 162, 235, 0.6)', 
+                    'rgba(75, 192, 192, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', 
+                    'rgba(54, 162, 235, 1)', 
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

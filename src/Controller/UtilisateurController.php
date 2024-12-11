@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -91,6 +92,64 @@ public function showUtilisateur(UtilisateurRepository $rep, int $id): Response
     ]);
 }
 
-    
+#[Route('/stats', name: 'stats_utilisateurs')]
+    public function statsUtilisateurs(EntityManagerInterface $em): Response
+    {
+        // Exemple de requête pour récupérer les statistiques par tranche d'âge
+        $utilisateursParAge = $em->createQuery(
+            'SELECT 
+                CASE
+                    WHEN u.age BETWEEN 0 AND 17 THEN \'0-17\'
+                    WHEN u.age BETWEEN 18 AND 25 THEN \'18-25\'
+                    WHEN u.age BETWEEN 26 AND 35 THEN \'26-35\'
+                    WHEN u.age BETWEEN 36 AND 50 THEN \'36-50\'
+                    ELSE \'50+\'
+                END AS trancheAge,
+                COUNT(u.id) AS nombreUtilisateurs
+             FROM App\Entity\Utilisateur u
+             GROUP BY trancheAge
+             ORDER BY trancheAge'
+        )->getResult();
+
+        // Exemple de requête pour récupérer les statistiques par genre
+        $utilisateursParGenre = $em->createQuery(
+            'SELECT 
+                u.genre AS genre,
+                COUNT(u.id) AS nombreUtilisateurs
+             FROM App\Entity\Utilisateur u
+             GROUP BY u.genre'
+        )->getResult();
+
+        // Transformation des données pour les adapter à la vue si nécessaire
+        $utilisateursParAge = array_map(function ($item) {
+            return [
+                'trancheAge' => $item['trancheAge'],
+                'nombreUtilisateurs' => $item['nombreUtilisateurs'],
+            ];
+        }, $utilisateursParAge);
+
+        $utilisateursParGenre = array_map(function ($item) {
+            return [
+                'genre' => $item['genre'] ?? 'Non spécifié',
+                'nombreUtilisateurs' => $item['nombreUtilisateurs'],
+            ];
+        }, $utilisateursParGenre);
+
+        // Retourne la vue Twig avec les données
+        return $this->render('utilisateur/stats.html.twig', [
+            'utilisateursParAge' => $utilisateursParAge,
+            'utilisateursParGenre' => $utilisateursParGenre,
+        ]);
+    }
 }
+
+
+
+    
+
+
+
+
+    
+
 

@@ -44,6 +44,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface /
 
     #[ORM\Column]
     private bool $isVerified = false;
+     
+    /**
+    * @ORM\Column(type="string", nullable=true)
+    */
+    private ?string $resetToken = null;
+
 
     public function getId(): ?int
     {
@@ -191,6 +197,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface /
     $this->statut = 'Inactif';
     $this->typeUtilisateur = null; // Ou assignez un TypeUtilisateur par défaut.
 }
-    
+  
+
+public function getResetToken(): ?string
+{
+    return $this->resetToken;
+}
+
+public function setResetToken(?string $resetToken): self
+{
+    $this->resetToken = $resetToken;
+    return $this;
+}
+
    
 }

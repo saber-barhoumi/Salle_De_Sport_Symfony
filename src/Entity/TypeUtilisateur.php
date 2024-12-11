@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\TypeUtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,6 +17,11 @@ class TypeUtilisateur
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z\s\-]+$/",
+        message: "Le nom de lutilisateur contient des caractères non autorisés. Utilisez uniquement des lettres, des chiffres, des espaces et des tirets."
+    )]
+
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::TEXT)]
