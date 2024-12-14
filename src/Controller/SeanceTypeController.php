@@ -1,18 +1,14 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\TypeSeance;
 use App\Form\TypeSeanceformType;
 use App\Repository\TypeSeanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Persistence\ManagerRegistry;
-
 
 class SeanceTypeController extends AbstractController
 {
@@ -22,61 +18,71 @@ class SeanceTypeController extends AbstractController
         return $this->render('typeseance/index.html.twig', [
             'controller_name' => 'SeanceTypeController',
         ]);
-    } 
+    }
 
-#[Route('/typeseance/list', name: 'list_typeseance')]
-    public function listtypeseance(TypeSeanceRepository $Seancetype): Response
+    #[Route('/typeseance/list', name: 'list_typeseance')]
+    public function listTypeseance(TypeSeanceRepository $seanceTypeRepository): Response
     {
-        $em=$Seancetype->findAll();
+        $types = $seanceTypeRepository->findAll();
 
         return $this->render('typeseance/list.html.twig', [
-            'seancetype' => $em,
+            'types' => $types,
         ]);
     }
+
     #[Route('/typeseance/new', name: 'add_typeseance')]
-    public function addtypeseance(Request $request, EntityManagerInterface $entityManager): Response
+    public function addTypeseance(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $seancetype = new TypeSeance();
-        $form = $this->createForm(TypeSeanceformType::class, $seancetype);
+        $typeSeance = new TypeSeance();
+        $form = $this->createForm(TypeSeanceformType::class, $typeSeance);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($seancetype);
+            $entityManager->persist($typeSeance);
             $entityManager->flush();
+
             return $this->redirectToRoute('list_typeseance');
-            
-        }  
-        return $this->render('typeseance/nouveau.html.twig',['form'=>$form->createView()]);  
+        }
+
+        return $this->render('typeseance/nouveau.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/typeseance/delete/{id}', name: 'delete_typeseance')]
-    public function deletetypeseance(int  $id, EntityManagerInterface $entityManager): Response
+    public function deleteTypeseance(int $id, EntityManagerInterface $entityManager): Response
     {
-        
-        $seancetype = $entityManager->getRepository(TypeSeance::class)->find($id);
+        $typeSeance = $entityManager->getRepository(TypeSeance::class)->find($id);
 
-            $entityManager->remove($seancetype);
+        if ($typeSeance) {
+            $entityManager->remove($typeSeance);
             $entityManager->flush();
-            return $this->redirectToRoute('list_typeseance');
-            
         }
 
-        #[Route('/typeseance/modify/{id}', name: 'modify_typeseance')]
-        public function modifytypeseance(int $id,Request $request, EntityManagerInterface $entityManager): Response
+        return $this->redirectToRoute('list_typeseance');
+    }
+
+    #[Route('/typeseance/modify/{id}', name: 'modify_typeseance')]
+    public function modifyTypeseance(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $seancetype = $entityManager->getRepository(TypeSeance::class)->find($id);
-        $form = $this->createForm(TypeSeanceformType::class, $seancetype);
+        $typeSeance = $entityManager->getRepository(TypeSeance::class)->find($id);
+
+        if (!$typeSeance) {
+            throw $this->createNotFoundException('Type de séance non trouvé');
+        }
+
+        $form = $this->createForm(TypeSeanceformType::class, $typeSeance);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($seancetype);
+            $entityManager->persist($typeSeance);
             $entityManager->flush();
-            return $this->redirectToRoute('list_typeseance');
-            
-        }  
-        return $this->render('typeseance/modify.html.twig',['form'=>$form->createView()]);  
-    }
-     
-        
 
+            return $this->redirectToRoute('list_typeseance');
+        }
+
+        return $this->render('typeseance/modify.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }

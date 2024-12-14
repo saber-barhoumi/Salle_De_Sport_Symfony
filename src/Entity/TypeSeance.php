@@ -12,7 +12,7 @@ class TypeSeance
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -20,6 +20,13 @@ class TypeSeance
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
+
+    #[ORM\OneToMany(mappedBy: 'typeSeance', targetEntity: Seance::class, cascade: ['persist', 'remove'])]
+    private Collection $seances;
+    public function __construct()
+    {
+        $this->seances = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -31,7 +38,7 @@ class TypeSeance
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -48,5 +55,31 @@ class TypeSeance
         $this->description = $description;
 
         return $this;
+    }
+    public function getSeances(): Collection
+    {
+        return $this->seances;
+    }
+
+    public function addSeance(Seance $seance): static
+    {
+        if (!$this->seances->contains($seance)) {
+            $this->seances->add($seance);
+            $seance->setTypeSeance($this);
+        }
+        return $this;
+    }
+    public function removeSeance(Seance $seance): static
+    {
+        if ($this->seances->removeElement($seance)) {
+            if ($seance->getTypeSeance() === $this) {
+                $seance->setTypeSeance(null);
+            }
+        }
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->type ?? '';
     }
 }
