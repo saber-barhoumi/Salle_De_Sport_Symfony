@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
-use App\Form\ResetPasswordType;  // Assurez-vous d'avoir ce formulaire
+use App\Form\ResetPasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface; // Ajoutez cette ligne
+use Doctrine\ORM\EntityManagerInterface;
 
 class PasswordResetController extends AbstractController
 {
@@ -32,7 +32,7 @@ class PasswordResetController extends AbstractController
 
                 // Créer le lien de réinitialisation
                 $resetUrl = $this->generateUrl('app_password_reset_token', [
-                    'token' => $token, // Le token est passé dans l'URL
+                    'token' => $token,
                 ], UrlGeneratorInterface::ABSOLUTE_URL);
 
                 // Envoyer l'email avec le lien de réinitialisation
@@ -42,7 +42,7 @@ class PasswordResetController extends AbstractController
                     ->subject('Password Reset Request')
                     ->htmlTemplate('emails/password_reset.html.twig')
                     ->context([
-                        'resetUrl' => $resetUrl, // Passer l'URL du reset dans le contexte de l'email
+                        'resetUrl' => $resetUrl,
                     ]);
 
                 $mailer->send($resetEmail);
@@ -65,7 +65,6 @@ class PasswordResetController extends AbstractController
             return $this->redirectToRoute('app_password_reset');
         }
 
-        // Créer et traiter le formulaire de réinitialisation du mot de passe
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
 
@@ -82,7 +81,7 @@ class PasswordResetController extends AbstractController
 
         return $this->render('password_reset/reset.html.twig', [
             'resetForm' => $form->createView(),
-            'token' => $token
+            'token' => $token,
         ]);
     }
 }
