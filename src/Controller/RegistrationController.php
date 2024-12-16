@@ -54,8 +54,8 @@ class RegistrationController extends AbstractController
             );
 
             $this->addFlash('success', 'Registration successful! Please verify your email.');
-
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_check_email'); // Rediriger vers une page intermédiaire
+            //return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -85,4 +85,11 @@ class RegistrationController extends AbstractController
         // Redirection vers la page de connexion après vérification
         return $this->redirectToRoute('app_login');
     }
+
+    #[Route('/check-email', name: 'app_check_email')]
+public function checkEmail(): Response
+{
+    return $this->render('registration/verify_your_email.html.twig');
+}
+
 }
