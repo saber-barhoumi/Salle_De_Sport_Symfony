@@ -93,54 +93,72 @@ public function showUtilisateur(UtilisateurRepository $rep, int $id): Response
 }
 
 #[Route('/stats', name: 'stats_utilisateurs')]
-    public function statsUtilisateurs(EntityManagerInterface $em): Response
-    {
-        // Exemple de requête pour récupérer les statistiques par tranche d'âge
-        $utilisateursParAge = $em->createQuery(
-            'SELECT 
-                CASE
-                    WHEN u.age BETWEEN 0 AND 17 THEN \'0-17\'
-                    WHEN u.age BETWEEN 18 AND 25 THEN \'18-25\'
-                    WHEN u.age BETWEEN 26 AND 35 THEN \'26-35\'
-                    WHEN u.age BETWEEN 36 AND 50 THEN \'36-50\'
-                    ELSE \'50+\'
-                END AS trancheAge,
-                COUNT(u.id) AS nombreUtilisateurs
-             FROM App\Entity\Utilisateur u
-             GROUP BY trancheAge
-             ORDER BY trancheAge'
-        )->getResult();
+public function statsUtilisateurs(EntityManagerInterface $em): Response
+{
+    // Exemple de requête pour récupérer les statistiques par tranche d'âge
+    $utilisateursParAge = $em->createQuery(
+        'SELECT 
+            CASE
+                WHEN u.age BETWEEN 0 AND 17 THEN \'0-17\'
+                WHEN u.age BETWEEN 18 AND 25 THEN \'18-25\'
+                WHEN u.age BETWEEN 26 AND 35 THEN \'26-35\'
+                WHEN u.age BETWEEN 36 AND 50 THEN \'36-50\'
+                ELSE \'50+\'
+            END AS trancheAge,
+            COUNT(u.id) AS nombreUtilisateurs
+         FROM App\Entity\Utilisateur u
+         GROUP BY trancheAge
+         ORDER BY trancheAge'
+    )->getResult();
 
-        // Exemple de requête pour récupérer les statistiques par genre
-        $utilisateursParGenre = $em->createQuery(
-            'SELECT 
-                u.genre AS genre,
-                COUNT(u.id) AS nombreUtilisateurs
-             FROM App\Entity\Utilisateur u
-             GROUP BY u.genre'
-        )->getResult();
+    // Exemple de requête pour récupérer les statistiques par genre
+    $utilisateursParGenre = $em->createQuery(
+        'SELECT 
+            u.genre AS genre,
+            COUNT(u.id) AS nombreUtilisateurs
+         FROM App\Entity\Utilisateur u
+         GROUP BY u.genre'
+    )->getResult();
 
-        // Transformation des données pour les adapter à la vue si nécessaire
-        $utilisateursParAge = array_map(function ($item) {
-            return [
-                'trancheAge' => $item['trancheAge'],
-                'nombreUtilisateurs' => $item['nombreUtilisateurs'],
-            ];
-        }, $utilisateursParAge);
+    // Nouvelle requête pour les statistiques par statut
+    $utilisateursParStatut = $em->createQuery(
+        'SELECT 
+            u.statut AS statut,
+            COUNT(u.id) AS nombreUtilisateurs
+         FROM App\Entity\Utilisateur u
+         GROUP BY u.statut'
+    )->getResult();
 
-        $utilisateursParGenre = array_map(function ($item) {
-            return [
-                'genre' => $item['genre'] ?? 'Non spécifié',
-                'nombreUtilisateurs' => $item['nombreUtilisateurs'],
-            ];
-        }, $utilisateursParGenre);
+    // Transformation des données pour les adapter à la vue si nécessaire
+    $utilisateursParAge = array_map(function ($item) {
+        return [
+            'trancheAge' => $item['trancheAge'],
+            'nombreUtilisateurs' => $item['nombreUtilisateurs'],
+        ];
+    }, $utilisateursParAge);
 
-        // Retourne la vue Twig avec les données
-        return $this->render('utilisateur/stats.html.twig', [
-            'utilisateursParAge' => $utilisateursParAge,
-            'utilisateursParGenre' => $utilisateursParGenre,
-        ]);
-    }
+    $utilisateursParGenre = array_map(function ($item) {
+        return [
+            'genre' => $item['genre'] ?? 'Non spécifié',
+            'nombreUtilisateurs' => $item['nombreUtilisateurs'],
+        ];
+    }, $utilisateursParGenre);
+
+    $utilisateursParStatut = array_map(function ($item) {
+        return [
+            'statut' => $item['statut'] ?? 'Non spécifié',
+            'nombreUtilisateurs' => $item['nombreUtilisateurs'],
+        ];
+    }, $utilisateursParStatut);
+
+    // Retourne la vue Twig avec les données
+    return $this->render('utilisateur/stats.html.twig', [
+        'utilisateursParAge' => $utilisateursParAge,
+        'utilisateursParGenre' => $utilisateursParGenre,
+        'utilisateursParStatut' => $utilisateursParStatut,
+    ]);
+}
+
 }
 
 

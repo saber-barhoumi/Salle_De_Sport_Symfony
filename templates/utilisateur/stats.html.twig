@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}Stats des Utilisateurs{% endblock %}
 
-
 {% block body %}
 
 <div class="container-fluid pt-4 px-4">
@@ -53,6 +52,29 @@
             </div>
         </div>
 
+        <!-- Répartition des Utilisateurs par Statut -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Répartition par Statut</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Statut</th>
+                            <th>Nombre d'Utilisateurs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in utilisateursParStatut %}
+                            <tr>
+                                <td>{{ stat.statut }}</td>
+                                <td>{{ stat.nombreUtilisateurs }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Graphique Répartition par Tranche d'Âge -->
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4">
@@ -66,6 +88,14 @@
             <div class="bg-secondary rounded h-100 p-4">
                 <h6 class="mb-4">Graphique - Répartition par Genre</h6>
                 <canvas id="genre-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Graphique Répartition par Statut -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Graphique - Répartition par Statut</h6>
+                <canvas id="statut-chart"></canvas>
             </div>
         </div>
 
@@ -130,6 +160,43 @@
                     'rgba(255, 99, 132, 1)', 
                     'rgba(54, 162, 235, 1)', 
                     'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    // Graphique Répartition par Statut
+    var statutCtx = document.getElementById('statut-chart').getContext('2d');
+    var statutChart = new Chart(statutCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for stat in utilisateursParStatut %}
+                    "{{ stat.statut }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for stat in utilisateursParStatut %}
+                        {{ stat.nombreUtilisateurs }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)', 
+                    'rgba(255, 205, 86, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)', 
+                    'rgba(255, 205, 86, 1)'
                 ],
                 borderWidth: 1
             }]

@@ -15,11 +15,10 @@ class ResetPasswordType extends AbstractType
         $builder
             ->add('password', PasswordType::class, [
                 'label' => 'New Password',
-                'attr' => ['placeholder' => 'Enter your new password']
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Reset Password',
-                'attr' => ['class' => 'btn btn-primary']
+                'attr' => [
+                    'placeholder' => 'Enter your new password',
+                    'novalidate' => 'novalidate' // Désactive la validation HTML5 pour ce champ
+                ]
             ]);
     }
 

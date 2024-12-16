@@ -27,7 +27,8 @@
     <!-- Registration Form -->
     <div class="card shadow-sm mx-auto" style="max-width: 500px;">
         <div class="card-body p-4">
-            {{ form_start(registrationForm) }}
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
             <div class="mb-3">
                 {{ form_label(registrationForm.nom, 'Last Name', { 'label_attr': {'class': 'form-label'} }) }}
                 {{ form_widget(registrationForm.nom, { 'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'} }) }}
@@ -43,23 +44,23 @@
                 {{ form_widget(registrationForm.age, { 'attr': {'class': 'form-control', 'placeholder': 'Enter your age'} }) }}
             </div>
 
-        <div class="form-check">
-        {{ form_label(registrationForm.genre, 'Genre', {'label_attr': {'class': 'form-check-input'}}) }}
-        <br>
-        {{ form_widget(registrationForm.genre, {'attr': {'class': 'form-check-input'}}) }}
-        {{ form_errors(registrationForm.genre) }}
-        </div>
-<br>
-<br>
-    <div class="form-check">
-    
-        {{ form_label(registrationForm.statut, 'Status', {'label_attr': {'class': 'form-check-input'}}) }}
-        <br>
-        {{ form_widget(registrationForm.statut, {'attr': {'class': 'form-check-input', 'disabled': 'disabled'}}) }}
-        {{ form_errors(registrationForm.statut) }}
-</div>
-         <br>   
-<br>
+            <div class="form-check">
+                {{ form_label(registrationForm.genre, 'Genre', {'label_attr': {'class': 'form-check-input'}}) }}
+                <br>
+                {{ form_widget(registrationForm.genre, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_errors(registrationForm.genre) }}
+            </div>
+
+            <br><br>
+            <div class="form-check">
+                {{ form_label(registrationForm.statut, 'Status', {'label_attr': {'class': 'form-check-input'}}) }}
+                <br>
+                {{ form_widget(registrationForm.statut, {'attr': {'class': 'form-check-input', 'disabled': 'disabled'}}) }}
+                {{ form_errors(registrationForm.statut) }}
+            </div>
+
+            <br><br>
+
             <div class="mb-3">
                 {{ form_label(registrationForm.email, 'Email Address', { 'label_attr': {'class': 'form-label'} }) }}
                 {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control', 'placeholder': 'Enter your email'} }) }}
@@ -76,7 +77,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg w-100">Register</button>
-            
+
             {{ form_end(registrationForm) }}
         </div>
     </div>

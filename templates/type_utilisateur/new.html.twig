@@ -6,14 +6,14 @@
 <h1 class="my-4 text-center">Ajouter un nouveau TypeUtilisateur</h1>
 
 <div class="container">
-    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-    
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'}}) }} <!-- Ajout de novalidate -->
+
     <div class="mb-3">
         {{ form_label(form.nom, 'Nom de TypeUtilisateur', {'label_attr': {'class': 'form-label'}}) }}
         {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
         {{ form_errors(form.nom) }}
     </div>
-    
+
     <div class="mb-3">
         {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
         {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
@@ -24,7 +24,7 @@
         <button type="submit" class="btn btn-success">Créer le Type d'utilisateur</button>
     </div>
     {{ form_end(form) }}
-    
+
     <div class="text-center mt-4">
         <a href="{{ path('app_afficheTypeUtilisateur') }}" class="btn btn-secondary">Retour à la liste des TypeUtilisateurs</a>
     </div>

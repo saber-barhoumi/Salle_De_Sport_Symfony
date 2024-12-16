@@ -39,11 +39,17 @@ class TypeUtilisateurType extends AbstractType
             ])
             ->add('description', TextType::class, [
                 'label' => 'Description',
+                'constraints' => [
+                    // Aucune validation HTML5 ici, juste la validation côté serveur
+                ],
             ])
             ->add('Utilisateurs', EntityType::class, [
                 'class' => Utilisateur::class,
                 'choice_label' => 'nom',  // Afficher le nom de l'utilisateur
                 'multiple' => true,  // Permet plusieurs sélections
+                'constraints' => [
+                    // Aucune validation HTML5 ici, juste la validation côté serveur
+                ],
             ]);
     }
 }

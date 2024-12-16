@@ -43,14 +43,28 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
-
-        // For example:
-         return new RedirectResponse($this->urlGenerator->generate('app_home'));
+{
+    // Vérifiez si une URL cible (targetPath) est enregistrée en session (e.g., après une tentative d'accès non autorisée)
+    if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+        return new RedirectResponse($targetPath);
     }
+
+    // Récupérez les rôles de l'utilisateur connecté
+    $user = $token->getUser();
+    $roles = $user->getRoles();
+
+    // Redirection basée sur le rôle
+    if (in_array('ROLE_ADMIN', $roles)) {
+        return new RedirectResponse($this->urlGenerator->generate('app_dashboard')); // Redirige vers le tableau de bord admin
+    }
+
+    if (in_array('ROLE_USER', $roles)) {
+        return new RedirectResponse($this->urlGenerator->generate('app_home')); // Redirige vers la page d'accueil utilisateur
+    }
+
+    // Redirection par défaut si aucun rôle ne correspond
+    return new RedirectResponse($this->urlGenerator->generate('app_home'));
+}
 
     protected function getLoginUrl(Request $request): string
     {

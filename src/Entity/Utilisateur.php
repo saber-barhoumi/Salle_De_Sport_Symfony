@@ -51,6 +51,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $resetToken = null;
 
+    #[ORM\Column(length: 50)]
+    #[Assert\Choice(choices: ['ROLE_USER', 'ROLE_ADMIN'], message: "Le rôle doit être soit 'ROLE_USER' soit 'ROLE_ADMIN'.")]
+    private ?string $role = 'ROLE_USER';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -180,16 +184,24 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         // Supprimez les données sensibles si nécessaire
     }
 
-    public function getRoles(): array
-    {
-        // Si un TypeUtilisateur est défini, générez un rôle en fonction
-        if ($this->TypeUtilisateur) {
-            return ['ROLE_' . strtoupper($this->TypeUtilisateur->getNom())];
-        }
+    public function getRole(): ?string
+{
+    return $this->role;
+}
 
-        // Rôle par défaut
-        return ['ROLE_USER'];
-    }
+public function setRole(string $role): self
+{
+    $this->role = $role;
+
+    return $this;
+}
+
+public function getRoles(): array
+{
+    // Retourne le rôle défini dans l'attribut "role"
+    return [$this->role];
+}
+
 
     public function isVerified(): bool
     {
