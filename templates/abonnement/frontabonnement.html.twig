@@ -1,0 +1,171 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Nos Abonnements{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/frontabon.css') }}">
+    <style>
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .search-bar input,
+        .search-bar select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
+
+        .alert-container {
+            margin-bottom: 15px;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .alert.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <h1>Nos abonnements disponibles</h1>
+    <h3>Barre De Recherche</h3>
+
+    <!-- Formulaire de recherche -->
+    <form method="GET" action="{{ path('recherche_front') }}" class="search-bar">
+        <input type="text" name="recherche" placeholder="Rechercher par type" value="{{ app.request.get('recherche') }}">
+        <input type="text" name="sport" placeholder="Sport (ex: Cardio)" value="{{ app.request.get('sport') }}">
+        <input type="number" name="prix_min" placeholder="Prix minimum (€)" value="{{ app.request.get('prix_min') }}">
+        <input type="number" name="prix_max" placeholder="Prix maximum (€)" value="{{ app.request.get('prix_max') }}">
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <!-- Section des messages -->
+    <div id="message-container" class="alert-container"></div>
+
+    <!-- Section principale où les abonnements sont affichés -->
+    <div id="abonnements-section" class="card-container">
+        {% if abonnements is defined and abonnements|length > 0 %}
+            {% for abonnement in abonnements %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3>{{ abonnement.typeAbonnement.nom }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Sport:</strong> {{ abonnement.sport }}</p>
+                        <p><strong>Prix:</strong> {{ abonnement.prix }} €</p>
+                            </span>
+                        </p>
+                        <p><strong>Capacité restante:</strong> {{ abonnement.capacite }}</p>
+                        <p><strong>Informations supplémentaires:</strong> {{ abonnement.commentaires }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <button 
+                            class="btn btn-primary" 
+                            onclick="acheterAbonnement('{{ abonnement.id }}', '{{ csrf_token('buy' ~ abonnement.id) }}')"
+                        >
+                            Acheter Abonnement
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucun abonnement trouvé selon vos critères.</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function afficherMessage(message, type) {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = `
+                <div class="alert ${type}">
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 15000);
+        }
+
+        function acheterAbonnement(abonnementId, csrfToken) {
+            fetch(`/abonnement/${abonnementId}/acheter`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Échec de la requête !");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    afficherMessage('Achat réussi !', 'success');
+                } else {
+                    afficherMessage('Erreur : ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                afficherMessage('Erreur : ' + error.message, 'error');
+                console.error("Erreur lors de la requête :", error);
+            });
+        }
+
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (
+                urlParams.has('recherche') ||
+                urlParams.has('sport') ||
+                urlParams.has('prix_min') ||
+                urlParams.has('prix_max')
+            ) {
+                setTimeout(() => {
+                    const section = document.getElementById('abonnements-section');
+                    if (section) {
+                        window.scrollTo({
+                            top: section.offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100); //pour que la page doit etre completement chargé
+            }
+        };
+    </script>
+{% endblock %}

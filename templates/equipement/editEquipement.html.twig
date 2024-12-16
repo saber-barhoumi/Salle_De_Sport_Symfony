@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Equipment{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-white">Add New Equipment</h2>
+    <div class="card p-4 bg-dark text-white">
+    {% form_theme form 'bootstrap_5_layout.html.twig' %}
+        {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+
+        <!-- Equipment Name -->
+        <div class="form-group">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.nom) }}
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+            {{ form_label(form.prix) }}
+            {{ form_widget(form.prix, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.prix) }}
+        </div>
+
+        <!-- Condition -->
+        <div class="form-group">
+      {# {{ form_label(form.etat) }}
+            <div class="d-flex align-items-center">
+                {% for key, choice in form.etat.vars.choices %}
+                    <label class="form-check me-3">
+                        {{ form_widget(form.etat[key], { 'attr': { 'class': 'form-check-input' } }) }}
+                        <span class="ms-2">{{ choice.label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+            {{ form_errors(form.etat) }}#}  
+        </div>
+           <!-- Supplier -->
+        <div class="form-group">
+            {{ form_label(form.etat) }}
+            {{ form_widget(form.etat, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.etat) }}
+        </div>
+        <!-- Supplier -->
+        <div class="form-group">
+            {{ form_label(form.fournisseur) }}
+            {{ form_widget(form.fournisseur, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.fournisseur) }}
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            {{ form_label(form.Equipement) }}
+            {{ form_widget(form.Equipement, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.Equipement) }}
+        </div>
+
+        <!-- Photo -->
+        <div class="form-group">
+            {{ form_label(form.photo) }}
+            {{ form_widget(form.photo, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.photo) }}
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            {{ form_label(form.descriptions) }}
+            {{ form_widget(form.descriptions, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.descriptions) }}
+        </div>
+
+        <!-- Save Button -->
+        <button type="submit" class="btn btn-danger btn-block mt-3">Save</button>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

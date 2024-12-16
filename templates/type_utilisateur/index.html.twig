@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des TypeUtilisateurs{% endblock %}
+
+{% block body %}
+<h1 class="my-4 text-center">Liste des TypeUtilisateurs</h1>
+
+<div class="container">
+    <!-- Liste des utilisateurs -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Utilisateurs</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for typeutilisateur in typeutilisateurs %}
+                    <tr>
+                        <td>{{ typeutilisateur.id }}</td>
+                        <td>{{ typeutilisateur.nom}}</td>
+                        <td>{{ typeutilisateur.description }}</td>
+                        <td>
+                            <a href="{{ path('app_utilisateur', { id: typeutilisateur.id }) }}" class="btn btn-sm btn-warning">Listes</a>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_ModifTypeUtilisateur', { id: typeutilisateur.id }) }}" class="btn btn-sm btn-warning">Modifier</a>
+                            <a href="{{ path('app_SuppTypeUtilisateur', { id: typeutilisateur.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">Aucun type d'utilisateur disponible.</td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Lien pour ajouter une nouvelle séance -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_ajoutTypeUtilisateur') }}" class="btn btn-success">Ajouter un nouveau TypeUtilisateur</a>
+    </div>
+
+</div>
+{% endblock %}

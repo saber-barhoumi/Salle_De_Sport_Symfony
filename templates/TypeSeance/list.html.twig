@@ -16,14 +16,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for seancetype in seancetype %}
+            {% for types in types %}
               <tr>
-                <td>{{ seancetype.id }}</td>
-                <td>{{ seancetype.type }}</td>
-                <td>{{ seancetype.description }}</td>
+                <td>{{ types.id }}</td>
+                <td>{{ types.type }}</td>
+                <td>{{ types.description }}</td>
                 <td>
-                    <a href="{{ path('modify_typeseance', { id: seancetype.id }) }}" class="btn btn-sm btn-warning">Modifier</a>
-                    <a href="{{ path('delete_typeseance', { id: seancetype.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                    <a href="{{ path('modify_typeseance', { id: types.id }) }}" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{{ path('delete_typeseance', { id: types.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
                 </td>
               </tr>
             {% else %}

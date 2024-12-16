@@ -1,0 +1,332 @@
+{% extends 'base3.html.twig' %}
+   {% block body %}
+ 
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" data-setbg="{{asset('img2/breadcrumb-bg.jpg')}}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb-text">
+                        <h2>Classes detail</h2>
+                        <div class="bt-option">
+                            <a href="{{ path('app_home') }}">Home</a>
+                            <a href="#">Seances</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+<!-- Classes Section Begin -->
+<section class="classes-section spad">
+        <div class="section-title">
+            <span>Our Classes</span>
+            <h2>WHAT WE CAN OFFER</h2>
+        </div>
+    <div class="container">
+ <div class="search-bar">
+    <h4>Rechercher une séance</h4>
+    <form method="get" action="{{ path('search_classes') }}">
+        <!-- Catégorie -->
+        <div>
+            <label for="category">Catégorie :</label>
+            <select id="category" name="category">
+                <option value="">Toutes</option>
+                <option value="cardio">Cardio</option>
+                <option value="force">Force</option>
+                <option value="souplesse">Souplesse</option>
+                <option value="danse">Danse</option>
+                <option value="training">Training</option>
+            </select>
+        </div>
+        <!-- Objectif -->
+        <div>
+            <label for="objective">Objectif :</label>
+            <select id="objective" name="objective">
+                <option value="">Tous</option>
+                <option value="perdre du poids">Perdre du poids</option>
+                <option value="se défouler">Se défouler</option>
+                <option value="se muscler">Se muscler</option>
+                <option value="entrainement avec dance">Entrainement avec danse</option>
+                <option value="renforcer les muscles profonds">Renforcer les muscles profonds</option>
+            </select>
+        </div>
+        <!-- Bouton de recherche -->
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
+</div>
+<div class="classes-container">
+    <div class="row">
+        {% for seance in uniqueSeances %}
+            <div class="col-lg-3 col-md-4">
+                <div class="class-item">
+                    <div class="ci-pic">
+                        <!-- Convertir le nom de la séance pour correspondre au nom du fichier -->
+                        {% set image_name = seance.nom|lower|replace({' ': '_'}) %}
+                        <img src="{{ asset('img2/classes/' ~ image_name ~ '.jpg') }}" alt="{{ seance.categorie }}" class="img-fluid">
+                    </div>
+                    <div class="ci-text">
+                        <span>{{ seance.categorie }}</span>
+                        <h5>{{ seance.nom }}</h5>
+                        <a href="{{ path('app_classes_details', { 'nom': seance.nom }) }}">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</section>
+
+<!-- Flash Messages Section -->
+{% for label, messages in app.flashes %}
+    <div class="flash-popup flash-popup-{{ label }} alert-dismissible fade show" role="alert">
+        <strong>
+            {% if label == 'success' %}
+                <h5 class="fas fa-check-circle"></h5> 
+            {% elseif label == 'error' %}
+                <h6 class="fas fa-times-circle"></h6>
+            {% elseif label == 'warning' %}
+                <h7 class="fas fa-exclamation-circle"></h7>
+            {% else %}
+                <h8 class="fas fa-info-circle"></h8>
+            {% endif %}
+        </strong>
+        {% for message in messages %}
+            <h9>{{ message }}</h9>
+        {% endfor %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+
+<!-- Classes Section End -->
+
+ <!-- timetable begin -->
+
+
+<!-- Flash Messages Section -->
+{% for label, messages in app.flashes %}
+    <div class="flash-popup flash-popup-{{ label }} alert-dismissible fade show" role="alert">
+        <strong>
+            {% if label == 'success' %}
+                <h5 class="fas fa-check-circle"></h5> 
+            {% elseif label == 'error' %}
+                <h6 class="fas fa-times-circle"></h6>
+            {% elseif label == 'warning' %}
+                <h7 class="fas fa-exclamation-circle"></h7>
+            {% else %}
+                <h8 class="fas fa-info-circle"></h8>
+            {% endif %}
+        </strong>
+        {% for message in messages %}
+            <h9>{{ message }}</h9>
+        {% endfor %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+
+<section class="class-timetable-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="section-title">
+                    <span>Find Your Time</span>
+                    <h2>Find Your Time</h2>
+                        <p>
+                        LA SEMAINE {{ start_of_week|date('d/m/Y') }} - {{ end_of_week|date('d/m/Y') }}
+                        </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="class-timetable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wednesday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                                <th>Saturday</th>
+                                <th>Sunday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set hours = ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'] %}
+                            {% for hour in hours %}
+                                <tr>
+                                    <td class="class-time">{{ hour }}:00 - {{ hour + 1 }}:00</td>
+                                    {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+                                        <td class="hover-bg ts-meta">
+                                            {% if timetable[day] is defined and timetable[day][hour] is defined %}
+                                                {% for seance in timetable[day][hour] %}
+                                                    <h5>{{ seance.nom }}</h5>
+                                                    <span>{{ seance.nomCoach }}</span><br>
+                                                    <span>Salle: {{ seance.salle }}</span>
+                                                {% endfor %}
+                                            {% else %}
+                                                <span>No classes</span>
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+ <!-- timetable end -->
+
+    <style>
+
+/* Search Bar Styling */
+.search-bar {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.search-bar h4 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.search-bar .row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-bar .form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.search-bar .form-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.search-bar .btn-primary {
+    background-color: #ff5722;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-bar .btn-primary:hover {
+    background-color: #e64a19;
+}
+
+/* Classes Section */
+.classes-container {
+    padding: 20px; /* Space around the content */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for emphasis */
+    margin-top: 20px; /* Space above the classes container */
+}
+
+.class-item {
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.class-item:hover {
+    transform: translateY(-10px);
+}
+
+.ci-pic {
+    height: 220px; /* Standardized image height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.ci-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.ci-text {
+    padding: 15px;
+    text-align: center;
+}
+
+.ci-text span {
+    font-size: 14px;
+    color: #ff5722;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.ci-text h5 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 10px;
+}
+
+.ci-text a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #ff5722;
+    font-size: 18px;
+}
+
+.ci-text a:hover {
+    text-decoration: underline;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .search-bar .row {
+        flex-direction: column;
+    }
+
+    .search-bar .col-lg-6 {
+        margin-bottom: 20px;
+    }
+
+    .class-item {
+        margin-bottom: 20px;
+    }
+}
+
+</style>
+{% endblock %}

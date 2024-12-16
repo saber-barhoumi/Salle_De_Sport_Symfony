@@ -1,0 +1,61 @@
+{# templates/reservation/reservationpdf.html.twig #}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .reservation-details {
+            margin-top: 30px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 100%;
+        }
+        .reservation-details th, .reservation-details td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Reservation Details</h1>
+
+    <div class="reservation-details">
+        <table style="width: 100%">
+            <tr>
+                <th>Reservation ID</th>
+                <td>{{ reservation.id }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+            </tr>
+            <tr>
+                <th>Equipment</th>
+                <td>{{ reservation.equipement.nom }}</td> {# Assuming 'equipement' is a related entity with a 'nom' property #}
+            </tr>
+            <tr>
+                <th>Start Date</th>
+                <td>{{ reservation.startDate|date('Y-m-d H:i') }}</td> {# Format the date #}
+            </tr>
+            <tr>
+                <th>End Date</th>
+                <td>{{ reservation.endDate|date('Y-m-d H:i') }}</td> {# Format the date #}
+            </tr>
+            <tr>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

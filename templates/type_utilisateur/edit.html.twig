@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un typeUtilisateur{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">
+        ✏️ Modifier le type d'utilisateur
+    </h1>
+
+    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        {{ form_widget(form) }}
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-success">💾 Enregistrer</button>
+            <a href="{{ path('app_afficheTypeUtilisateur') }}" class="btn btn-outline-secondary">↩ Retour</a>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

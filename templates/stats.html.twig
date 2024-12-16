@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}GymLife - Bootstrap 5 Admin Template{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    {% block css %}
+    <!-- Favicon -->
+    <link href="{{asset('img/favicon.ico')}}" rel="icon">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="{{asset('https://fonts.googleapis.com')}}">
+    <link rel="preconnect" href="{{asset('https://fonts.gstatic.com')}}" crossorigin>
+    <link href="{{asset('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap')}}" rel="stylesheet"> 
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css')}}" rel="stylesheet">
+    <link href="{{asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css')}}" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{asset('lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
+    <link href="{{asset('lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    {% endblock %}
+</head>
+
+<body>
+    
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+        <!-- Sidebar Start -->
+<div class="sidebar pe-4 pb-3">
+    <nav class="navbar bg-secondary navbar-dark">
+        <!-- Titre et logo -->
+        <a href="index.html" class="navbar-brand mx-4 mb-3">
+            <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>GymLife</h3>
+        </a>
+
+        <!-- Section Profil de l'utilisateur -->
+        <div class="d-flex align-items-center ms-4 mb-4">
+            <div class="position-relative">
+                <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+            </div>
+            <div class="ms-3">
+                <h6 class="mb-0">Jhon Doe</h6>
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <!-- Menu de navigation -->
+        <div class="navbar-nav w-100">
+            <!-- Dashboard -->
+            <a href="index.html" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+            <!-- Gestion des Utilisateurs -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Gestion Utilisateurs</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="#" class="dropdown-item">Liste des Utilisateurs</a>
+                    <a href="#" class="dropdown-item">Ajouter un Utilisateur</a>
+                </div>
+            </div>
+
+            <!-- Gestion des Produits -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-wrench me-2"></i>Gestion Produits</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="#" class="dropdown-item">Liste des Produits</a>
+                    <a href="#" class="dropdown-item">Ajouter un Produit</a>
+                </div>
+            </div>
+
+            <!-- Gestion des Équipements -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-wrench me-2"></i>Gestion Équipements</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="#" class="dropdown-item">Liste des Équipements</a>
+                    <a href="#" class="dropdown-item">Ajouter un Équipement</a>
+                </div>
+            </div>
+
+            <!-- Gestion des Membres -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Gestion Membres</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="#" class="dropdown-item">Liste des Membres</a>
+                    <a href="#" class="dropdown-item">Ajouter un Membre</a>
+                </div>
+            </div>
+
+            <!-- Gestion des Séances -->
+           <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>Gestion Seances</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="{{ path('list_seance') }}" class="dropdown-item">Liste des Seances</a>
+                    <a href="{{ path('add_seance') }}" class="dropdown-item">Ajouter une Seance</a>
+                    <a href="{{ path('list_typeseance') }}" class="dropdown-item">Liste des types de Seances</a>
+                    <a href="{{ path('add_typeseance') }}" class="dropdown-item">Ajouter un type de Seance</a>
+                </div>
+            </div>
+            <!-- Gestion des abonnements  -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-calendar-check me-2"></i>Gestion abonnements</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="#" class="dropdown-item">Liste des abonnements</a>
+                    <a href="#" class="dropdown-item">Ajouter une abonnement</a>
+                </div>
+            </div>
+
+            <!-- Blocs CRUD & Statistiques -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bar-chart me-2"></i>Statistiques</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="#" class="dropdown-item">Statistiques Utilisateurs</a>
+                    <a href="#" class="dropdown-item">Statistiques Produits</a>
+                    <a href="#" class="dropdown-item">Statistiques Équipements</a>
+                    <a href="#" class="dropdown-item">Statistiques Membres</a>
+                    <a href="{{ path('stats_seances') }}" class="dropdown-item">Statistiques Séances</a>
+                    <a href="#" class="dropdown-item">Statistiques abonnements</a>
+
+                </div>
+            </div>
+
+        </div>
+    </nav>
+</div>
+<!-- Sidebar End -->
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control bg-dark border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-envelope me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Message</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all message</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">New user added</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Password changed</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">John Doe</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="#" class="dropdown-item">Settings</a>
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+{% block body %}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Nombre de Séances par Catégorie -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Nombre de Séances par Catégorie</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Nombre de Séances</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                            {% if stat.typeSeance is defined %}
+                                <tr>
+                                    <td>{{ stat.typeSeance }}</td>
+                                    <td>{{ stat.nombreSeances }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Taux d'Occupation par Catégorie -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Taux d'Occupation par Catégorie</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Taux d'Occupation (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                            {% if stat.tauxOccupation is defined %}
+                                <tr>
+                                    <td>{{ stat.typeSeance }}</td>
+                                    <td>{{ stat.tauxOccupation|number_format(2) }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        
+        <!-- Nombre total de participants par séance et Moyenne -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Participants par Séance</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom de la Séance</th>
+                            <th>Nombre Total de Participants</th>
+                            <th>Moyenne des Participants</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                            {% if stat.nomSeance is defined %}
+                                <tr>
+                                    <td>{{ stat.nomSeance }}</td>
+                                    <td>{{ stat.totalParticipants }}</td>
+                                    <td>{{ stat.moyenneParticipants|number_format(2) }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Séances Annulées -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Séances Annulées</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom de la Séance</th>
+                            <th>Date de la Séance</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for seance in seancesAnnulees %}
+                            <tr>
+                                <td>{{ seance.nomSeance }}</td>
+                                <td>{{ seance.dateSeance|date('d/m/Y H:i') }}</td>
+                                <td>{{ seance.statutSeance }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Table End --> 
+<div class="col-sm-12 col-xl-6">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Taux d'Occupation par Catégorie</h6>
+        <canvas id="bar-chart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('bar-chart').getContext('2d');
+    var barChart = new Chart(ctx, {
+        type: 'bar', // type du graphique (barres)
+        data: {
+            labels: [
+                {% for stat in tauxOccupationParCategorie %}
+                    "{{ stat.typeSeance }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Taux d\'Occupation (%)',
+                data: [
+                    {% for stat in tauxOccupationParCategorie %}
+                        {{ stat.tauxOccupation|number_format(2, '.', '') }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Couleur de fond des barres
+                borderColor: 'rgba(54, 162, 235, 1)', // Couleur des bordures des barres
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10 // définir l'écart entre les valeurs sur l'axe Y
+                    }
+                }
+            }
+        }
+    });
+</script>
+            <div class="col-sm-12 col-xl-6">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Participants par Séance</h6>
+        <canvas id="pie-chart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('pie-chart').getContext('2d');
+    var pieChart = new Chart(ctx, {
+        type: 'pie', // Type du graphique (secteurs)
+        data: {
+            labels: [
+                {% for stat in participantsParSeance %}
+                    "{{ stat.nomSeance }}" {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Total Participants',
+                data: [
+                    {% for stat in participantsParSeance %}
+                        {{ stat.totalParticipants }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', // Pink
+                    'rgba(54, 162, 235, 0.6)', // Blue
+                    'rgba(255, 206, 86, 0.6)', // Yellow
+                    'rgba(75, 192, 192, 0.6)', // Green
+                    'rgba(153, 102, 255, 0.6)', // Purple
+                    'rgba(255, 159, 64, 0.6)', // Orange
+                    'rgba(100, 149, 237, 0.6)', // Cornflower Blue
+                    'rgba(255, 105, 180, 0.6)', // Hot Pink
+                    'rgba(255, 165, 0, 0.6)', // Orange Red
+                    'rgba(34, 139, 34, 0.6)', // Forest Green
+                    'rgba(255, 99, 71, 0.6)', // Tomato
+                    'rgba(0, 128, 128, 0.6)', // Teal
+                    'rgba(139, 69, 19, 0.6)', // Brown
+                    'rgba(255, 20, 147, 0.6)', // Deep Pink
+                    'rgba(75, 0, 130, 0.6)', // Indigo
+                    'rgba(255, 228, 181, 0.6)' // Moccasin
+                ], // Distinct colors for each segment
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', 
+                    'rgba(54, 162, 235, 1)', 
+                    'rgba(255, 206, 86, 1)', 
+                    'rgba(75, 192, 192, 1)', 
+                    'rgba(153, 102, 255, 1)', 
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(100, 149, 237, 1)', 
+                    'rgba(255, 105, 180, 1)', 
+                    'rgba(255, 165, 0, 1)', 
+                    'rgba(34, 139, 34, 1)', 
+                    'rgba(255, 99, 71, 1)', 
+                    'rgba(0, 128, 128, 1)', 
+                    'rgba(139, 69, 19, 1)', 
+                    'rgba(255, 20, 147, 1)', 
+                    'rgba(75, 0, 130, 1)', 
+                    'rgba(255, 228, 181, 1)' 
+                ], // Border colors for each segment
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' participants';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+
+{% endblock %}
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="#">Your Site Name</a>, All Right Reserved. 
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
+                            <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+ {% block js %}
+    <!-- JavaScript Libraries -->
+    <script src="{{asset('https://code.jquery.com/jquery-3.4.1.min.js')}}"></script>
+    <script src="{{asset('https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('lib/chart/chart.min.js')}}"></script>
+    <script src="{{asset('lib/easing/easing.min.js')}}"></script>
+    <script src="{{asset('lib/waypoints/waypoints.min.js')}}"></script>
+    <script src="{{asset('lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/moment.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{asset('js/main.js')}}"></script>
+{% endblock %}
+</html>

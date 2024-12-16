@@ -6,20 +6,31 @@ use App\Repository\TypeSeanceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TypeSeanceRepository::class)]
 class TypeSeance
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z\s\-]+$/",
+        message: "Le type de la séance contient des caractères non autorisés. Utilisez uniquement des lettres, des chiffres, des espaces et des tirets."
+    )]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
+
+    #[ORM\OneToMany(mappedBy: 'typeSeance', targetEntity: Seance::class, cascade: ['persist', 'remove'])]
+    private Collection $seances;
+    public function __construct()
+    {
+        $this->seances = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -31,7 +42,7 @@ class TypeSeance
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -48,5 +59,31 @@ class TypeSeance
         $this->description = $description;
 
         return $this;
+    }
+    public function getSeances(): Collection
+    {
+        return $this->seances;
+    }
+
+    public function addSeance(Seance $seance): static
+    {
+        if (!$this->seances->contains($seance)) {
+            $this->seances->add($seance);
+            $seance->setTypeSeance($this);
+        }
+        return $this;
+    }
+    public function removeSeance(Seance $seance): static
+    {
+        if ($this->seances->removeElement($seance)) {
+            if ($seance->getTypeSeance() === $this) {
+                $seance->setTypeSeance(null);
+            }
+        }
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->type ?? '';
     }
 }
