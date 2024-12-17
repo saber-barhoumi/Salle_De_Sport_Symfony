@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Typeabonnement{% endblock %}
+
+{% block body %}
+    <h1>Edit Typeabonnement</h1>
+
+    {{ include('typeabonnement/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a class="btn btn-secondary btn-lg" href="{{ path('app_typeabonnement_index') }}">Retour</a>
+
+    {{ include('typeabonnement/_delete_form.html.twig') }}
+{% endblock %}

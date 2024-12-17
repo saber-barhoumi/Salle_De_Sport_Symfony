@@ -1,0 +1,16 @@
+{{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+
+<div class="card p-4 bg-dark text-white">
+    <!-- Loop through form fields to style them individually -->
+    {% for field in form %}
+        <div class="form-group mb-3">
+            {{ form_label(field, null, { 'label_attr': { 'class': 'form-label' } }) }}
+            {{ form_widget(field, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(field, { 'attr': { 'class': 'text-danger' } }) }}
+        </div>
+    {% endfor %}
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-danger btn-block mt-3">{{ button_label|default('Enregistrer') }}</button>
+</div>
+{{ form_end(form) }}

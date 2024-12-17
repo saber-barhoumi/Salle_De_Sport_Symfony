@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_abonnement_delete', {'id': abonnement.id}) }}" onsubmit="return confirm('Vous etes sue de supprimer?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ abonnement.id) }}">
+    <button class="btn btn-primary btn-lg">Supprimer</button>
+</form>

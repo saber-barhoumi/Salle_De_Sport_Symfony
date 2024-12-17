@@ -1,0 +1,91 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--dark);
+    margin: 0;
+    padding: 0;
+    color: var(--light);
+}
+
+h1 {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--primary);
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Card styles */
+.card {
+    background-color: var(--secondary);
+    border: 1px solid var(--light);
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    color: var(--light);
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    background-color: var(--primary);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-body p {
+    margin: 5px 0;
+    color: var(--light);
+}
+
+.card-footer {
+    background-color: var(--dark);
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Buttons in cards */
+.card-footer .btn {
+    background-color: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.card-footer .btn:hover {
+    background-color: var(--light);
+    color: var(--secondary);
+    transform: scale(1.05);
+}
+
+/* Status colors */
+.yes {
+    color: green;
+    font-weight: bold;
+}
+
+.no {
+    color: red;
+    font-weight: bold;
+}

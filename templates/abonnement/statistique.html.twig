@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques des abonnements{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Statistiques des abonnements</h1>
+
+    {# Nombre d'abonnements achetés par type d'abonnement #}
+    <h2>Nombre d'abonnements achetés par type d'abonnement</h2>
+    <table border="1" cellpadding="5" cellspacing="0" style="margin-bottom: 20px;">
+        <thead>
+            <tr>
+                <th>Type d'abonnement</th>
+                <th>Nombre d'achats</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if nombreAbonnementsParType is defined and nombreAbonnementsParType|length > 0 %}
+                {% for entry in nombreAbonnementsParType %}
+                    <tr>
+                        <td>{{ entry.typeAbonnement }}</td>
+                        <td>{{ entry.nombre }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucun abonnement acheté.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    {# Montant total par type d'abonnement #}
+    <h2>Montant total par type d'abonnement</h2>
+    <table border="1" cellpadding="5" cellspacing="0" style="margin-bottom: 20px;">
+        <thead>
+            <tr>
+                <th>Type d'abonnement</th>
+                <th>Montant total (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if montantParType is defined and montantParType|length > 0 %}
+                {% for entry in montantParType %}
+                    <tr>
+                        <td>{{ entry.typeAbonnement }}</td>
+                        <td>{{ entry.montant|number_format(2, '.', ',') }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucun montant enregistré.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    {# Capacité totale par sport #}
+    <h2>Capacité totale par sport</h2>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Sport</th>
+                <th>Capacité totale</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if capaciteParSport is defined and capaciteParSport|length > 0 %}
+                {% for entry in capaciteParSport %}
+                    <tr>
+                        <td>{{ entry.sport }}</td>
+                        <td>{{ entry.capacite }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucune donnée disponible.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,251 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Nombre de Séances par Catégorie -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Nombre de Séances par Catégorie</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Nombre de Séances</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                            {% if stat.typeSeance is defined %}
+                                <tr>
+                                    <td>{{ stat.typeSeance }}</td>
+                                    <td>{{ stat.nombreSeances }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Taux d'Occupation par Catégorie -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Taux d'Occupation par Catégorie</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Taux d'Occupation (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                            {% if stat.tauxOccupation is defined %}
+                                <tr>
+                                    <td>{{ stat.typeSeance }}</td>
+                                    <td>{{ stat.tauxOccupation|number_format(2) }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        
+        <!-- Nombre total de participants par séance et Moyenne -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Participants par Séance</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom de la Séance</th>
+                            <th>Nombre Total de Participants</th>
+                            <th>Moyenne des Participants</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                            {% if stat.nomSeance is defined %}
+                                <tr>
+                                    <td>{{ stat.nomSeance }}</td>
+                                    <td>{{ stat.totalParticipants }}</td>
+                                    <td>{{ stat.moyenneParticipants|number_format(2) }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Séances Annulées -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Séances Annulées</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom de la Séance</th>
+                            <th>Date de la Séance</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for seance in seancesAnnulees %}
+                            <tr>
+                                <td>{{ seance.nomSeance }}</td>
+                                <td>{{ seance.dateSeance|date('d/m/Y H:i') }}</td>
+                                <td>{{ seance.statutSeance }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    <!-- Table End --> 
+    <div class="col-sm-12 col-xl-6">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Taux d'Occupation par Catégorie</h6>
+        <canvas id="bar-chart"></canvas>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    var ctx = document.getElementById('bar-chart').getContext('2d');
+    var barChart = new Chart(ctx, {
+        type: 'bar', // type du graphique (barres)
+        data: {
+            labels: [
+                {% for stat in tauxOccupationParCategorie %}
+                    "{{ stat.typeSeance }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Taux d\'Occupation (%)',
+                data: [
+                    {% for stat in tauxOccupationParCategorie %}
+                        {{ stat.tauxOccupation|number_format(2, '.', '') }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Couleur de fond des barres
+                borderColor: 'rgba(54, 162, 235, 1)', // Couleur des bordures des barres
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10 // définir l'écart entre les valeurs sur l'axe Y
+                    }
+                }
+            }
+        }
+    });
+    </script>
+            <div class="col-sm-12 col-xl-6">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Participants par Séance</h6>
+        <canvas id="pie-chart"></canvas>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    var ctx = document.getElementById('pie-chart').getContext('2d');
+    var pieChart = new Chart(ctx, {
+        type: 'pie', // Type du graphique (secteurs)
+        data: {
+            labels: [
+                {% for stat in participantsParSeance %}
+                    "{{ stat.nomSeance }}" {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Total Participants',
+                data: [
+                    {% for stat in participantsParSeance %}
+                        {{ stat.totalParticipants }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', // Pink
+                    'rgba(54, 162, 235, 0.6)', // Blue
+                    'rgba(255, 206, 86, 0.6)', // Yellow
+                    'rgba(75, 192, 192, 0.6)', // Green
+                    'rgba(153, 102, 255, 0.6)', // Purple
+                    'rgba(255, 159, 64, 0.6)', // Orange
+                    'rgba(100, 149, 237, 0.6)', // Cornflower Blue
+                    'rgba(255, 105, 180, 0.6)', // Hot Pink
+                    'rgba(255, 165, 0, 0.6)', // Orange Red
+                    'rgba(34, 139, 34, 0.6)', // Forest Green
+                    'rgba(255, 99, 71, 0.6)', // Tomato
+                    'rgba(0, 128, 128, 0.6)', // Teal
+                    'rgba(139, 69, 19, 0.6)', // Brown
+                    'rgba(255, 20, 147, 0.6)', // Deep Pink
+                    'rgba(75, 0, 130, 0.6)', // Indigo
+                    'rgba(255, 228, 181, 0.6)' // Moccasin
+                ], // Distinct colors for each segment
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', 
+                    'rgba(54, 162, 235, 1)', 
+                    'rgba(255, 206, 86, 1)', 
+                    'rgba(75, 192, 192, 1)', 
+                    'rgba(153, 102, 255, 1)', 
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(100, 149, 237, 1)', 
+                    'rgba(255, 105, 180, 1)', 
+                    'rgba(255, 165, 0, 1)', 
+                    'rgba(34, 139, 34, 1)', 
+                    'rgba(255, 99, 71, 1)', 
+                    'rgba(0, 128, 128, 1)', 
+                    'rgba(139, 69, 19, 1)', 
+                    'rgba(255, 20, 147, 1)', 
+                    'rgba(75, 0, 130, 1)', 
+                    'rgba(255, 228, 181, 1)' 
+                ], // Border colors for each segment
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' participants';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    </script>
+    <!-- JavaScript Libraries -->
+    <script src="{{asset('https://code.jquery.com/jquery-3.4.1.min.js')}}"></script>
+    <script src="{{asset('https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('lib/chart/chart.min.js')}}"></script>
+    <script src="{{asset('lib/easing/easing.min.js')}}"></script>
+    <script src="{{asset('lib/waypoints/waypoints.min.js')}}"></script>
+    <script src="{{asset('lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/moment.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{asset('js/main.js')}}"></script>
+{% endblock %}
