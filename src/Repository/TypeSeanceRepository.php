@@ -40,4 +40,6 @@ class TypeSeanceRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    // Calculer le taux d'occupation par catégorie de séance
+
 }

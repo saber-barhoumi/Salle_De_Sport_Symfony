@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Abonnement{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-white">Créer un nouveau Abonnement</h2>
+    <div class="card p-4 bg-dark text-white">
+        {{ include('abonnement/_form.html.twig') }}
+        <a class="btn btn-secondary btn-lg mt-3" href="{{ path('app_abonnement_index') }}">Retour</a>
+    </div>
+</div>
+{% endblock %}

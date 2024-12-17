@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Abonnement{% endblock %}
+
+{% block body %}
+    <h1>Abonnement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Autorenouvellement</th>
+                <td>{{ abonnement.autorenouvellement ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Commentaires</th>
+                <td>{{ abonnement.commentaires }}</td>
+            </tr>
+            <tr>
+                <th>Type d'Abonnement</th>
+                <td>{{ abonnement.typeAbonnement.nom }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_abonnement_index') }}">Retour</a>
+    <br>
+    <br> 
+
+    <a href="{{ path('app_abonnement_edit', {'id': abonnement.id}) }}">Modifier</a>
+
+    {{ include('abonnement/_delete_form.html.twig') }}
+{% endblock %}

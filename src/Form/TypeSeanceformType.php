@@ -16,11 +16,4 @@ class TypeSeanceformType extends AbstractType
             ->add('description')
         ;
     }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => TypeSeance::class,
-        ]);
-    }
 }
