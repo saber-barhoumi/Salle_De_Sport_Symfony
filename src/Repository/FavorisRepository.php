@@ -8,11 +8,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class FavorisRepository extends ServiceEntityRepository
 {
-    /**
-     * Constructor
-     *
-     * @param ManagerRegistry $registry
-     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Favoris::class);
@@ -26,14 +21,23 @@ class FavorisRepository extends ServiceEntityRepository
      */
     public function findFavorisByUser(int $userId)
     {
+    
         return $this->createQueryBuilder('f')
-            ->andWhere('f.user = :userId')
+            ->andWhere('f.utilisateur = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('f.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
+    public function addFavoris(Produit $produit, User $user)
+    {
+        $favoris = new Favoris();
+        $favoris->setProduit($produit);
+        $favoris->setUser($user);
 
+        $this->_em->persist($favoris);
+        $this->_em->flush();
+    }
     /**
      * Supprimer un favori par produit et utilisateur
      *
@@ -41,11 +45,11 @@ class FavorisRepository extends ServiceEntityRepository
      * @param int $userId
      * @return void
      */
-    public function removeFavori(int $produitId, int $userId)
+    public function removeFavoris(int $produitId, int $userId)
     {
         $favori = $this->createQueryBuilder('f')
             ->andWhere('f.produit = :produitId')
-            ->andWhere('f.user = :userId')
+            ->andWhere('f.utilisateur = :userId')
             ->setParameter('produitId', $produitId)
             ->setParameter('userId', $userId)
             ->getQuery()
@@ -57,4 +61,5 @@ class FavorisRepository extends ServiceEntityRepository
             $entityManager->flush();
         }
     }
+    
 }

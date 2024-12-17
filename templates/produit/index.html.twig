@@ -7,6 +7,65 @@
 {% endblock %}
 
 {% block body %}
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 0;
+    list-style: none;
+}
+
+
+.pagination a, .pagination span {
+    padding: 10px 20px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.pagination a:hover, .pagination span:hover {
+    background-color: #007bff;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.pagination .active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.pagination .disabled {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #ddd;
+}
+
+.pagination .prev, .pagination .next {
+    font-weight: 700;
+    color: #007bff;
+}
+
+.pagination .prev:hover, .pagination .next:hover {
+    color: #0056b3; 
+    transform: translateY(-2px); 
+}
+
+.pagination .first, .pagination .last {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+</style>
 <div class="container mt-5">
     <h1 class="mb-4 text-center">
         🛒 Liste des Produits Disponibles
@@ -19,6 +78,27 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
+
+    <!-- Formulaire de filtrage -->
+    <form method="get" action="{{ path('produit_index') }}" class="mb-4">
+        <div class="row">
+            <!-- Filtre par Prix Minimum -->
+            <div class="col">
+                <label for="prixMin">Prix Min (€)</label>
+                <input type="number" step="0.01" name="prixMin" id="prixMin" class="form-control" value="{{ app.request.query.get('prixMin') }}">
+            </div>
+
+            <!-- Filtre par Quantité Minimum -->
+            <div class="col">
+                <label for="quantiteMin">Quantité Stock Min</label>
+                <input type="number" name="quantiteMin" id="quantiteMin" class="form-control" value="{{ app.request.query.get('quantiteMin') }}">
+            </div>
+
+            <div class="col mt-4">
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+            </div>
+        </div>
+    </form>
 
     <!-- Tableau des produits -->
     <div class="table-responsive">
@@ -100,4 +180,12 @@
         </div>
     </div>
 </div>
+   
+    <!-- Pagination -->
+    <div class="pagination justify-content-center">
+        {{ knp_pagination_render(produits) }}
+    </div>
+</div>
 {% endblock %}
+
+

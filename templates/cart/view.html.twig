@@ -1,0 +1,334 @@
+{% extends 'base3.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Votre Panier</h1>
+
+        {% if produits is empty %}
+            <div class="alert alert-warning text-center">
+                <strong>Votre panier est vide.</strong>
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Image</th>
+                            <th>Nom du Produit</th>
+                            <th>Prix Unitaire</th>
+                            <th>Quantité</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set total = 0 %}
+                        {% for produit in produits %}
+                            <tr id="product-{{ produit.produit.id }}">
+                                <td><img src="{{ asset('uploads/images/' ~ produit.produit.image) }}" alt="{{ produit.produit.nom }}" class="img-fluid" style="max-width: 80px;"></td>
+                                <td>{{ produit.produit.nom }}</td>
+                                <td>{{ produit.produit.prix }} €</td>
+                                <td>
+                                    <input type="number" value="{{ produit.quantite }}" min="1" class="form-control w-50 quantity" data-price="{{ produit.produit.prix }}" data-id="{{ produit.produit.id }}" />
+                                </td>
+                                <td class="total">{{ produit.produit.prix * produit.quantite }} €</td>
+                                <td>
+                                    <a href="{{ path('cart_remove', {'id': produit.produit.id}) }}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                            {% set total = total + (produit.produit.prix * produit.quantite) %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <h3>Total : <span class="text-primary" id="total-price">{{ total }} €</span></h3>
+                <a href="/produitFront" class="primary-btn pricing-btn">Procéder au paiement</a>
+            </div>
+        {% endif %}
+
+       <div class="ts-slider owl-carousel owl-loaded owl-drag">
+                                            
+                                            
+                                            
+                                            
+                                            
+                                    <div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-2660px, 0px, 0px); transition: 1.2s; width: 4180px;"><div class="owl-item cloned" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/pack-big-mass-gainer-3kg-creatine-monohydrate-gsn-675bfa38c6fe8.jpg" style="background-image: url('/uploads/images/pack-big-mass-gainer-3kg-creatine-monohydrate-gsn-675bfa38c6fe8.jpg');">
+                                <div class="ts_text">
+                                    <h4>big-mass-gainer</h4>
+                                    <p>pack-big-mass-gainer-3kg-creatine-monohydrate-gsn</p>
+                                    <span>80.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/36" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/36" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item cloned" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/diet-whey-creatine-monohydrate-applied-nutrition-675bfae08c8df.jpg" style="background-image: url('/uploads/images/diet-whey-creatine-monohydrate-applied-nutrition-675bfae08c8df.jpg');">
+                                <div class="ts_text">
+                                    <h4>diet-whey</h4>
+                                    <p>diet-whey-creatine-monohydrate-applied-nutrition</p>
+                                    <span>110.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/37" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/37" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item cloned" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/real-mass-68kg-creatine-monohydrate-300g-676159179bf56.jpg" style="background-image: url('/uploads/images/real-mass-68kg-creatine-monohydrate-300g-676159179bf56.jpg');">
+                                <div class="ts_text">
+                                    <h4>real-mass</h4>
+                                    <p>real-mass-68kg-creatine-monohydrate-300g</p>
+                                    <span>10.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/38" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/38" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/pack-explosivite-musculaire-thermo-gainer-proscience-creatine-675bf80009e2b.jpg" style="background-image: url('/uploads/images/pack-explosivite-musculaire-thermo-gainer-proscience-creatine-675bf80009e2b.jpg');">
+                                <div class="ts_text">
+                                    <h4>Nitro</h4>
+                                    <p>20 acides aminés standards qui s'assemblent de différentes manières pour former une variété de protéines.</p>
+                                    <span>210.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/33" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/33" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/pack-proteine-isolate-creatine-monohydrate-gsn-675bf9ae4395d.jpg" style="background-image: url('/uploads/images/pack-proteine-isolate-creatine-monohydrate-gsn-675bf9ae4395d.jpg');">
+                                <div class="ts_text">
+                                    <h4>Pack Protéine Isolate</h4>
+                                    <p>Le Pack Protéine Isolate + Créatine Monohydrate - GSN est une combinaison idéale pour les sportifs et amateurs de musculation visant une croissance musculaire rapide, une récupération optimisée et une amélioration des performances.</p>
+                                    <span>320.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/35" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/35" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/pack-big-mass-gainer-3kg-creatine-monohydrate-gsn-675bfa38c6fe8.jpg" style="background-image: url('/uploads/images/pack-big-mass-gainer-3kg-creatine-monohydrate-gsn-675bfa38c6fe8.jpg');">
+                                <div class="ts_text">
+                                    <h4>big-mass-gainer</h4>
+                                    <p>pack-big-mass-gainer-3kg-creatine-monohydrate-gsn</p>
+                                    <span>80.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/36" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/36" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/diet-whey-creatine-monohydrate-applied-nutrition-675bfae08c8df.jpg" style="background-image: url('/uploads/images/diet-whey-creatine-monohydrate-applied-nutrition-675bfae08c8df.jpg');">
+                                <div class="ts_text">
+                                    <h4>diet-whey</h4>
+                                    <p>diet-whey-creatine-monohydrate-applied-nutrition</p>
+                                    <span>110.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/37" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/37" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item active" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/real-mass-68kg-creatine-monohydrate-300g-676159179bf56.jpg" style="background-image: url('/uploads/images/real-mass-68kg-creatine-monohydrate-300g-676159179bf56.jpg');">
+                                <div class="ts_text">
+                                    <h4>real-mass</h4>
+                                    <p>real-mass-68kg-creatine-monohydrate-300g</p>
+                                    <span>10.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/38" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/38" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item cloned active" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/pack-explosivite-musculaire-thermo-gainer-proscience-creatine-675bf80009e2b.jpg" style="background-image: url('/uploads/images/pack-explosivite-musculaire-thermo-gainer-proscience-creatine-675bf80009e2b.jpg');">
+                                <div class="ts_text">
+                                    <h4>Nitro</h4>
+                                    <p>20 acides aminés standards qui s'assemblent de différentes manières pour former une variété de protéines.</p>
+                                    <span>210.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/33" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/33" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item cloned active" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/pack-proteine-isolate-creatine-monohydrate-gsn-675bf9ae4395d.jpg" style="background-image: url('/uploads/images/pack-proteine-isolate-creatine-monohydrate-gsn-675bf9ae4395d.jpg');">
+                                <div class="ts_text">
+                                    <h4>Pack Protéine Isolate</h4>
+                                    <p>Le Pack Protéine Isolate + Créatine Monohydrate - GSN est une combinaison idéale pour les sportifs et amateurs de musculation visant une croissance musculaire rapide, une récupération optimisée et une amélioration des performances.</p>
+                                    <span>320.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/35" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/35" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div><div class="owl-item cloned" style="width: 380px;"><div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" data-setbg="/uploads/images/pack-big-mass-gainer-3kg-creatine-monohydrate-gsn-675bfa38c6fe8.jpg" style="background-image: url('/uploads/images/pack-big-mass-gainer-3kg-creatine-monohydrate-gsn-675bfa38c6fe8.jpg');">
+                                <div class="ts_text">
+                                    <h4>big-mass-gainer</h4>
+                                    <p>pack-big-mass-gainer-3kg-creatine-monohydrate-gsn</p>
+                                    <span>80.00 €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="/panier/ajouter/36" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="/ajouter-favoris/36" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div></div></div><div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div><div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div></div>
+
+<section class="pricing-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Nos Plans</span>
+                    <h2>Choisissez votre plan de pack protéiné</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-8">
+                <div class="ps-item">
+                    <h3>Pack Protéiné de Base</h3>
+                    <div class="pi-price">
+                        <h2>$ 39.0</h2>
+                        <span>Achat UNIQUE</span>
+                    </div>
+                    <ul>
+                        <li>Shakes protéinés</li>
+                        <li>Shaker offert</li>
+                        <li>Guide nutritionnel personnalisé</li>
+                        <li>Favorise la récupération musculaire</li>
+                        <li>Plan mois par mois</li>
+                        <li>Sans restriction de temps</li>
+                    </ul>
+                    <a href="#" class="primary-btn pricing-btn">Acheter maintenant</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-8">
+                <div class="ps-item">
+                    <h3>Pack Protéiné 12 Mois</h3>
+                    <div class="pi-price">
+                        <h2>$ 99.0</h2>
+                        <span>Achat UNIQUE</span>
+                    </div>
+                    <ul>
+                        <li>Shakes protéinés</li>
+                        <li>Shaker offert</li>
+                        <li>Guide nutritionnel personnalisé</li>
+                        <li>Favorise la récupération musculaire</li>
+                        <li>Fourniture pour 12 mois</li>
+                        <li>Sans restriction de temps</li>
+                    </ul>
+                    <a href="#" class="primary-btn pricing-btn">Acheter maintenant</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-8">
+                <div class="ps-item">
+                    <h3>Pack Protéiné 6 Mois</h3>
+                    <div class="pi-price">
+                        <h2>$ 59.0</h2>
+                        <span>Achat UNIQUE</span>
+                    </div>
+                    <ul>
+                        <li>Shakes protéinés</li>
+                        <li>Shaker offert</li>
+                        <li>Guide nutritionnel personnalisé</li>
+                        <li>Favorise la récupération musculaire</li>
+                        <li>Fourniture pour 6 mois</li>
+                        <li>Sans restriction de temps</li>
+                    </ul>
+                    <a href="#" class="primary-btn pricing-btn">Acheter maintenant</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+   <script>
+        // JavaScript to update total when quantity changes
+        document.querySelectorAll('.quantity').forEach(function (input) {
+            input.addEventListener('input', function () {
+                var quantity = parseInt(this.value) || 1; // Default to 1 if invalid input
+                var price = parseFloat(this.getAttribute('data-price'));
+                var productId = this.getAttribute('data-id');
+
+                // Calculate the total for this item
+                var totalCell = document.querySelector('#product-' + productId + ' .total');
+                totalCell.textContent = (price * quantity).toFixed(2) + ' €';
+
+                // Update the total cart price
+                updateTotal();
+            });
+        });
+
+        function updateTotal() {
+            var total = 0;
+            document.querySelectorAll('.total').forEach(function (cell) {
+                total += parseFloat(cell.textContent.replace(' €', '') || 0);
+            });
+            document.getElementById('total-price').textContent = total.toFixed(2) + ' €';
+        }
+    </script>
+{% endblock %}

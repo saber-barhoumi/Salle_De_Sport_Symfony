@@ -13,11 +13,12 @@ class Favoris
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'favoris')]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'favoris', cascade: ['persist'])] // Ajout du cascade persist
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'favoris')]
+    #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'favoris', cascade: ['remove'])]
     private ?Produit $produit = null;
+
 
     public function getId(): ?int
     {

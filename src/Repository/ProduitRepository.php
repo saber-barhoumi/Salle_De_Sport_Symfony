@@ -19,6 +19,29 @@ class ProduitRepository extends ServiceEntityRepository
         parent::__construct($registry, Produit::class);
     }
 
+
+    public function findByFilters($prixMin, $quantiteMin)
+{
+    $queryBuilder = $this->createQueryBuilder('p');
+
+    // Appliquer le filtre de prix si nécessaire
+    if ($prixMin) {
+        $queryBuilder->andWhere('p.prix >= :prixMin')
+                     ->setParameter('prixMin', (float) $prixMin);
+    }
+
+    // Appliquer le filtre de quantité si nécessaire
+    if ($quantiteMin) {
+        $queryBuilder->andWhere('p.quantiteStock >= :quantiteMin')
+                     ->setParameter('quantiteMin', (int) $quantiteMin);
+    }
+
+    // Tri par ID croissant
+    $queryBuilder->orderBy('p.id', 'ASC');
+
+    return $queryBuilder->getQuery()->getResult();
+}
+
     public function findByCriteria($nom = null, $categorieProduit = null)
     {
         // Créer un QueryBuilder pour l'entité Produit
@@ -38,6 +61,12 @@ class ProduitRepository extends ServiceEntityRepository
         // Exécuter la requête et retourner les résultats
         return $queryBuilder->getQuery()->getResult();
     }
+    public function findAllQuery()
+{
+    return $this->createQueryBuilder('p')
+        ->orderBy('p.id', 'ASC')
+        ->getQuery();
+}
 
 
 
@@ -93,6 +122,5 @@ public function getMinPriceProduit(): ?array
                 ->getOneOrNullResult();
 }
 
-    
 
 }

@@ -31,4 +31,5 @@ class CartService
         }
         $cart->setTotal($total);
     }
+    
 }

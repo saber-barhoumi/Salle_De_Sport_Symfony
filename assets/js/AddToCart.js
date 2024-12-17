@@ -1,4 +1,4 @@
-$(document).ready(function() {
+/*$(document).ready(function() {
     // Gestion du clic sur le bouton "Ajouter au panier"
     $('.btn-ajouter-au-panier').on('click', function(e) {
         e.preventDefault();  // Empêche le comportement par défaut (soumission du formulaire, scroll de la page)
@@ -36,3 +36,4 @@ $(document).ready(function() {
         $('.panier-total').text("Total : " + total + "€");
     }
 });
+*/

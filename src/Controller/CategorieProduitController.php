@@ -46,6 +46,7 @@ final class CategorieProduitController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    
     #[Route('/{id}', name: 'categorie_produit_show', methods: ['GET'])]
     public function show(CategorieProduit $categorieProduit): Response
     {

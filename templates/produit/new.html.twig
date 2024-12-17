@@ -5,14 +5,63 @@
 {% block title %}Créer un Produit{% endblock %}
 
 {% block body %}
-    <h1>Créer un Produit</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Créer un Nouveau Produit</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.nom) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.image) }}
-        {{ form_row(form.tags) }} {# Affichage du champ de tags #}
+        {{ form_start(form, {'attr': {'class': 'form-group'}}) }}
 
-        <button class="btn btn-primary">Créer</button>
-    {{ form_end(form) }}
+        <div class="form-row mb-3">
+            <div class="col-md-6">
+                {{ form_row(form.nom, {
+                    'label': 'Nom du Produit',
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.prix, {
+                    'label': 'Prix',
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_row(form.description, {
+                'label': 'Description du Produit',
+                'attr': {'class': 'form-control'}
+            }) }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_row(form.quantiteStock, {
+                'label': 'Quantité en Stock',
+                'attr': {'class': 'form-control'}
+            }) }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_row(form.CategorieProduit, {
+                'label': 'Catégorie du Produit',
+                'attr': {'class': 'form-control'}
+            }) }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_row(form.image, {
+                'label': 'Image du Produit',
+                'attr': {'class': 'form-control-file'}
+            }) }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_row(form.tags, {
+                'label': 'Tags Associés',
+                'attr': {'class': 'form-check'}
+            }) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Créer</button>
+
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

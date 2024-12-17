@@ -17,6 +17,11 @@ class Tag
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom du tag est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le nom du tag ne doit pas dépasser {{ limit }} caractères."
+    )]
     private ?string $nom = null;
 
     /**

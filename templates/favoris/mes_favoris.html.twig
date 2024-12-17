@@ -1,30 +1,45 @@
+{% extends 'base3.html.twig' %}
 
-{% if favoris is empty %}
-    <div class="alert alert-info" role="alert">
-        Aucun produit dans vos favoris.
+{% block title %}Produits et Favoris{% endblock %}
+
+{% block body %}
+<section class="contact-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Nos Produits</span>
+                    <h2>CE QUE NOUS PROPOSONS</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% if produits is defined %}
+                {% for produit in produits %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="class-item">
+                            <div class="ci-pic">
+                                <img src="{{ produit.image ? asset('uploads/images/' ~ produit.image) : 'https://via.placeholder.com/150' }}" alt="{{ produit.nom }}">
+                            </div>
+                            <div class="ci-text">
+                                <h5>{{ produit.nom }}</h5>
+                                <div class="prix"> <p>{{ produit.prix }} DT</p></div>
+                                <a href="#"><i class="fa fa-angle-right"></i></a>
+                            </div>
+                            <div class="product-info">
+                                <h4>{{ produit.nom }}</h4>
+                                <p>{{ produit.description }}</p>
+                                <span>{{ produit.prix }} €</span>
+                                <a href="{{ path('cart_add', {id: produit.id}) }}" class="primary-btn btn-normal appoinment-btn">Ajouter au Panier</a>
+                                <a href="{{ path('supprimer_favoris', {'id': produit.id}) }}" class="primary-btn btn-normal appoinment-btn">Retirer des favoris</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Aucun produit trouvé.</p>
+            {% endif %}
+        </div>
     </div>
-{% else %}
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Produit</th>
-                <th>Prix</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for fav in favoris %}
-                <tr>
-                    <td>{{ fav.produit.nom }}</td>
-                    <td>{{ fav.produit.prix }}€</td>
-                    <td>
-                        <a href="{{ path('supprimer_favoris', {id: fav.produit.id}) }}" class="text-danger" onclick="return confirm('Êtes-vous sûr de vouloir retirer ce produit de vos favoris ?');">
-                            <i class="fas fa-trash-alt"></i> Retirer
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
-
+</section>
+{% endblock %}

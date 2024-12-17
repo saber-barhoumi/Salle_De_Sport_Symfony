@@ -1,127 +1,153 @@
 <?php
+
 namespace App\Controller;
-use App\Repository\ProduitRepository;
+
+use App\Entity\Utilisateur;  // Utilisez Utilisateur ici au lieu de User
 use App\Entity\Favoris;
-use App\Entity\Produit;
 use App\Repository\FavorisRepository;
+use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 class FavorisController extends AbstractController
 {
-    private $entityManager;
-
-    // Injection de EntityManagerInterface via le constructeur
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+   public function __construct(
+        FavorisRepository $favorisRepository,
+        ProduitRepository $produitRepository,
+        EntityManagerInterface $entityManager,
+    ) {
+        $this->favorisRepository = $favorisRepository;
+        $this->produitRepository = $produitRepository;
         $this->entityManager = $entityManager;
     }
-    // Afficher tous les produits avec un bouton pour les ajouter aux favoris
-    #[Route('/produits', name: 'produits_liste')]
-    public function afficherTousLesProduits(ProduitRepository $produitRepository): \Symfony\Component\HttpFoundation\Response
-    {
-        // Récupérer tous les produits
-        $produits = $produitRepository->findAll();
+    
 
-        // Retourner la vue avec les produits
-        return $this->render('favoris/produits_liste.html.twig', [
-            'produits' => $produits
+    
+
+    #[Route('/mes-favoris', name: 'mes_favoris')]
+    public function afficherMesFavoris(?UserInterface $user): Response
+    {
+        // Si l'utilisateur n'est pas connecté, on crée un utilisateur statique
+        if (!$user) {
+            // If no user is logged in, create a default static user
+            $user = new Utilisateur();
+            $user->setNom('Saber');
+            $user->setPrenom('Brh');
+            $user->setEmail('saber.brh@example.com');
+            $user->setStatut('active');
+            $user->setMotDePasse('Saber123');
+            $user->setAge(24);
+
+        }
+// Vérifier si l'utilisateur a un ID valide
+if (!$user->getId()) {
+    // Si pas d'ID, on ne tente pas de récupérer les favoris
+    $favoris = [];
+} else {
+    // Récupérer tous les favoris de l'utilisateur
+    $favoris = $this->favorisRepository->findFavorisByUser($user->getId());
+}
+        // Récupérer tous les produits disponibles
+        $produits = $this->produitRepository->findAll();
+
+        // Retourner la vue avec les favoris et les produits disponibles
+        return $this->render('favoris/mes_favoris.html.twig', [
+            'favoris' => $favoris,
+            'produits' => $produits,
         ]);
     }
 
-    // Ajouter un produit aux favoris
+    
     #[Route('/ajouter-favoris/{id}', name: 'ajouter_favoris')]
-    public function ajouterAuxFavoris(Produit $produit, Security $security): RedirectResponse
+    public function ajouterAuxFavoris(int $id): Response
     {
-        $user = $security->getUser();
-
-        // Vérifier si le produit est déjà dans les favoris
-        $favorisRepository = $this->entityManager->getRepository(Favoris::class);
-        $existingFavoris = $favorisRepository->findOneBy([
-            'utilisateur' => $user,
-            'produit' => $produit
-        ]);
-
-        if ($existingFavoris) {
-            $this->addFlash('error', 'Ce produit est déjà dans vos favoris.');
-            return $this->redirectToRoute('produit_show', ['id' => $produit->getId()]);
+        // Récupérer l'utilisateur connecté ou créer un utilisateur statique si non connecté
+        $user = $this->security->getUser();
+        if (!$user) {
+            $user = new Utilisateur();
+            $user->setNom('Saber');
+            $user->setPrenom('Brh');
+            $user->setAge(24);
+            $user->setEmail('saber.brh@example.com');
+            $user->setStatut('active');
+            $user->setMotDePasse('Saber123');
         }
-
+    
+        // Récupérer le produit par son ID
+        $produit = $this->produitRepository->find($id);
+        
+        if (!$produit) {
+            $this->addFlash('error', 'Produit introuvable.');
+            return $this->redirectToRoute('mes_favoris');
+        }
+    
+        // Vérifier si le produit est déjà dans les favoris
+        $favorisExistant = $this->favorisRepository->findOneBy([
+            'utilisateur' => $user,
+            'produit' => $produit,
+        ]);
+    
+        if ($favorisExistant) {
+            $this->addFlash('info', 'Ce produit est déjà dans vos favoris.');
+            return $this->redirectToRoute('mes_favoris');
+        }
+    
         // Ajouter le produit aux favoris
         $favoris = new Favoris();
         $favoris->setProduit($produit);
         $favoris->setUtilisateur($user);
-
-        // Sauvegarder dans la base de données
+    
         $this->entityManager->persist($favoris);
         $this->entityManager->flush();
-
-        $this->addFlash('success', 'Produit ajouté aux favoris !');
-        return $this->redirectToRoute('produit_show', ['id' => $produit->getId()]);
+    
+        // Ajouter un message flash pour l'utilisateur
+        $this->addFlash('success', 'Produit ajouté aux favoris.');
+    
+        // Rediriger vers la liste des favoris
+        return $this->redirectToRoute('mes_favoris');
     }
+    
+    
 
-    // Afficher les favoris de l'utilisateur
-    #[Route('/mes-favoris', name: 'mes_favoris')]
-    public function afficherMesFavoris(FavorisRepository $favorisRepository, Security $security)
-    {
-        $user = $security->getUser();
-
-        // Récupérer les favoris de l'utilisateur
-        $favoris = $favorisRepository->findBy(['utilisateur' => $user]);
-
-        return $this->render('favoris/mes_favoris.html.twig', [
-            'favoris' => $favoris
-        ]);
-    }
-
-    // Supprimer un produit des favoris
     #[Route('/supprimer-favoris/{id}', name: 'supprimer_favoris')]
-    public function retirerDesFavoris(Produit $produit, Security $security): RedirectResponse
-    {
-        $user = $security->getUser();
+public function supprimerFavoris(int $id, ?UserInterface $user): Response
+{
+    // Si l'utilisateur n'est pas connecté, créer un utilisateur statique
+    if (!$user) {
+        $user = new Utilisateur();
+        $user->setNom('Saber');
+        $user->setPrenom('Brh');
+        $user->setEmail('saber.brh@example.com');
+        $user->setStatut('active');
+        $user->setMotDePasse('Saber123');
+        $user->setAge(24);
+    }
 
-        // Récupérer le produit dans les favoris
-        $favorisRepository = $this->entityManager->getRepository(Favoris::class);
-        $favoris = $favorisRepository->findOneBy([
-            'utilisateur' => $user,
-            'produit' => $produit
-        ]);
+    // Récupérer le produit par son ID
+    $produit = $this->produitRepository->find($id);
+
+    if ($produit) {
+        // Récupérer les favoris associés au produit et à l'utilisateur
+        $favoris = $this->favorisRepository->findOneBy(['produit' => $produit, 'utilisateur' => $user]);
 
         if ($favoris) {
+            // Supprimer le produit des favoris
             $this->entityManager->remove($favoris);
-            $this->entityManager->flush();
+            $this->entityManager->flush();  // S'assurer que la suppression est effectuée
 
             $this->addFlash('success', 'Produit retiré des favoris.');
         } else {
             $this->addFlash('error', 'Ce produit n\'est pas dans vos favoris.');
         }
+    } else {
+        $this->addFlash('error', 'Produit introuvable.');
+    }
 
-        return $this->redirectToRoute('produit_show', ['id' => $produit->getId()]);
-    }
-    
-    #[Route('/favoris/liste', name: 'liste_favoris')]
-    public function listeFavoris(FavorisRepository $favorisRepository, Security $security): JsonResponse
-    {
-        $user = $security->getUser();
-        $favoris = $favorisRepository->findBy(['utilisateur' => $user]);
-    
-        // Transformer les favoris en un tableau
-        $favorisData = array_map(function ($favori) {
-            return [
-                'id' => $favori->getProduit()->getId(),
-                'nom' => $favori->getProduit()->getNom(),
-                'prix' => $favori->getProduit()->getPrix(),
-                'description' => $favori->getProduit()->getDescription(),
-                'image' => $favori->getProduit()->getImage(),
-            ];
-        }, $favoris);
-    
-        return $this->json(['favoris' => $favorisData]);
-    }
-    
-    
-    
+    // Rediriger vers la liste des favoris, qui doit être mise à jour
+    return $this->redirectToRoute('mes_favoris');
+}
 }

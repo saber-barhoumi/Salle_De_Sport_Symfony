@@ -13,6 +13,15 @@
         <img src="{{ asset('images/categories.png') }}" alt="Catégories de produits" class="img-fluid" style="max-width: 250px;">
     </div>
 
+    <!-- Formulaire de filtrage par quantité -->
+    <div class="text-center mb-4">
+        <form method="get" action="{{ path('categorie_produit_index') }}" class="form-inline">
+            <label for="quantiteMin" class="mr-2">Filtrer par quantité :</label>
+            <input type="number" id="quantiteMin" name="quantiteMin" value="{{ app.request.query.get('quantiteMin') }}" class="form-control mr-2" placeholder="Quantité minimale">
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+        </form>
+    </div>
+
     <!-- Table des catégories -->
     <table class="table table-striped">
         <thead class="thead-dark">

@@ -3,7 +3,28 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
 produit_front:
     path: /produitFront
     controller: App\Controller\ProduitController::AFFICHERFRONT
     methods: [GET, POST]
+
+app_produit_front_index:
+    path: /produit/frontproduit
+    controller: App\Controller\ProduitController::frontIndex
+
+cart_view:
+    path: /panier
+    controller: App\Controller\CartController::viewCart
+
+cart_add:
+    path: /panier/ajouter/{id}
+    controller: App\Controller\CartController::addToCart
+
+cart_remove:
+    path: /panier/supprimer/{id}
+    controller: App\Controller\CartController::removeFromCart
+catalogue_pdf:
+    path: /catalogue/pdf
+    controller: App\Controller\CatalogueController::generatePDF
+

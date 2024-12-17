@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Controller;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Produit;
 use App\Form\ProduitType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\UnicodeString; 
@@ -16,19 +17,82 @@ use App\Form\AdvancedSearchType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use App\Entity\Tag;
 use App\Repository\TagRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\CartService;  // Si vous avez un service pour gérer le panier
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Repository\FavorisRepository; // Assurez-vous que ce namespace est correct
+use App\Repository\CategorieProduitRepository;  // Assurez-vous que cette ligne est présente
+use App\Entity\Cart;
+use App\Service\ProduitService;  // Exemple de service injecté
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
+use Knp\Bundle\PaginatorBundle\KnpPaginatorInterface;
 
 
 #[Route('/produit')]
 class ProduitController extends AbstractController
 {
     
+    #[Route('/produits', name: 'produit_front')]
+    public function afficherProduitsEtGestion(
+        Request $request,
+        EntityManagerInterface $em,
+        SessionInterface $session,
+        FavorisRepository $favorisRepository,
+        CategorieProduitRepository $categorieProduitRepository
+    ): Response {
+        // Vérifier si le panier existe dans la session, sinon le créer
+        if (!$session->has('cart')) {
+            $session->set('cart', [
+                'produits' => [],
+                'total' => 0,
+            ]);
+        }
+    
+        // Récupérer les produits, tags, favoris et catégories
+        $produits = $em->getRepository(Produit::class)->findAll();
+        $tags = $em->getRepository(Tag::class)->findAll();
+        $favoris = $favorisRepository->findAll();
+        $categories = $categorieProduitRepository->findAll();
+        $cart = $session->get('cart', []);
+    
+        // Créer le formulaire de recherche avancée
+        $form = $this->createForm(AdvancedSearchType::class);
+        $form->handleRequest($request);
+    
+        // Si le formulaire a été soumis et est valide, filtrer les produits en fonction des critères
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $nom = $data['nom'] ?? null;
+            $categorie = $data['CategorieProduit'] ?? null;
+            $produits = $em->getRepository(Produit::class)->findByCriteria($nom, $categorie);
+        }
+    
+        // Si un paramètre de catégorie est passé, filtrer les produits par catégorie
+        if ($request->query->get('categorie')) {
+            $categorieId = $request->query->get('categorie');
+            $categorie = $em->getRepository(CategorieProduit::class)->find($categorieId);
+            if ($categorie) {
+                $produits = $em->getRepository(Produit::class)->findBy(['CategorieProduit' => $categorie]);
+            }
+        }
+    
+        // Rendre la réponse avec le formulaire et les produits filtrés
+        return $this->render('produit/produitFront.html.twig', [
+            'form' => $form->createView(),
+            'produits' => $produits,
+            'tags' => $tags,
+            'cart' => $cart,
+            'favoris' => $favoris,
+            'categories' => $categories,
+        ]);
+    }
+    
+
+
+
     
     #[Route('/frontproduit', name: 'frontproduit_index')]
-    public function AFFICHERFRONT(Request $request, EntityManagerInterface $em, SessionInterface $session, FavorisRepository $favorisRepository): Response
+    public function AFFICHERFRONT(Request $request, EntityManagerInterface $em, SessionInterface $session, FavorisRepository $favorisRepository , CategorieProduitRepository $categorieProduitRepository): Response
     {   
         // Vérifier si le panier existe dans la session, sinon le créer
         if (!$session->has('cart')) {
@@ -37,11 +101,13 @@ class ProduitController extends AbstractController
                 'total' => 0,     // Total à 0
             ]);
         }
+        
 
         // Récupérer tous les produits, tags et favoris
         $produits = $em->getRepository(Produit::class)->findAll();
         $tags = $em->getRepository(Tag::class)->findAll();
         $favoris = $favorisRepository->findAll(); // Utiliser le repository FavorisRepository
+        $categories = $categorieProduitRepository->findAll();
 
         // Récupérer le panier depuis la session
         $cart = $session->get('cart', []);
@@ -56,6 +122,9 @@ class ProduitController extends AbstractController
             $nom = $data['nom'] ?? null;
             $categorie = $data['CategorieProduit'] ?? null;
 
+           ;
+
+
             // Filtrer les produits en fonction des critères du formulaire
             $produits = $em->getRepository(Produit::class)->findByCriteria($nom, $categorie);
         }
@@ -67,11 +136,10 @@ class ProduitController extends AbstractController
             'tags' => $tags, // Ajouter les tags ici
             'cart' => $cart,
             'favoris' => $favoris, // Ajouter les favoris ici
-        ]);
-    
+            'categories' => $categories,
 
-    
-      
+        ]);
+
  }
  #[Route('/new', name: 'produit_new', methods: ['GET', 'POST'])]
  public function new(Request $request, EntityManagerInterface $em): Response
@@ -80,7 +148,7 @@ class ProduitController extends AbstractController
      $form = $this->createForm(ProduitType::class, $produit);
      $form->handleRequest($request);
  
-     if ($form->isSubmitted() && $form->isValid()) {
+     if ($form->isSubmitted() ){
          // Gestion de l'image
          $imageFile = $form->get('image')->getData();
          if ($imageFile) {
@@ -117,7 +185,9 @@ class ProduitController extends AbstractController
                  $em->persist($tag); // Persiste un nouveau tag
              }
          }
- 
+                 // Filtrage des mots interdits dans la description
+
+         
          // Persistance du produit
          $em->persist($produit);
          $em->flush();
@@ -130,29 +200,47 @@ class ProduitController extends AbstractController
          'form' => $form->createView(),
      ]);
  }
- #[Route('/{id}/modal', name: 'produit_modal')]
-public function modal($id, EntityManagerInterface $em): Response
-{
-    $produit = $em->getRepository(Produit::class)->find($id);
-    if (!$produit) {
-        throw $this->createNotFoundException('Produit introuvable');
-    }
 
-    return $this->render('produit/details_modal.html.twig', [
-        'produit' => $produit,
-    ]);
-}
+
+ 
+ 
+
+
 
     
-    #[Route('/', name: 'produit_index', methods: ['GET'])]
- public function index(EntityManagerInterface $em): Response
- {
-    $produits = $em->getRepository(Produit::class)->findAll();
 
-    return $this->render('produit/index.html.twig', [
-        'produits' => $produits,
-    ]);
- }      
+ #[Route('/', name: 'produit_index', methods: ['GET'])]
+ public function index(Request $request, EntityManagerInterface $em, PaginatorInterface $paginator): Response
+ {
+     $query = $em->getRepository(Produit::class)->createQueryBuilder('p')
+                 ->orderBy('p.id', 'ASC') // Classement par ID
+                 ->getQuery();
+ 
+     // Filtrage des données si nécessaire
+     $prixMin = $request->query->get('prixMin');
+     $quantiteMin = $request->query->get('quantiteMin');
+ 
+     if ($prixMin) {
+         $query = $em->getRepository(Produit::class)->findByPriceGreaterThanOrEqual((float)$prixMin);
+     }
+ 
+     if ($quantiteMin) {
+         $query = $em->getRepository(Produit::class)->findByQuantityGreaterThanOrEqual((int)$quantiteMin);
+     }
+ 
+     // Utilisation du paginator pour paginer les résultats
+     $pagination = $paginator->paginate(
+         $query, // Query à paginer
+         $request->query->getInt('page', 1), // Page actuelle, par défaut 1
+         5 // Nombre d'éléments par page
+     );
+ 
+     return $this->render('produit/index.html.twig', [
+        'produits' => $pagination, // Changez 'pagination' en 'produits'
+
+     ]);
+ }    
+ 
  #[Route('/{id}', name: 'produit_show', methods: ['GET'])]
 public function show($id, EntityManagerInterface $em): Response
 {
@@ -174,8 +262,40 @@ public function show($id, EntityManagerInterface $em): Response
         'categorie' => $categorie,
     ]);
 }
+/*
+public function indexAction(Request $request, ProduitRepository $produitRepository): Response
+{
+    // 1. Récupérer le paramètre de tri (par exemple, 'prix', 'date', 'nom', etc.)
+    $sortBy = $request->query->get('sortBy', 'nom'); // Tri par défaut sur 'nom'
 
- 
+    // 2. Récupérer la liste des produits triés via le repository
+    $produits = $produitRepository->findBySort($sortBy);
+
+    // 3. Récupérer le numéro de la page actuelle (par défaut la page 1)
+    $page = $request->query->getInt('page', 1);
+
+    // 4. Nombre de produits par page
+    $limit = 10;
+
+    // 5. Calculer les indices pour la pagination
+    $start = ($page - 1) * $limit;
+
+    // 6. Diviser les produits en pages
+    $totalProduits = count($produits);
+    $produitsPagines = array_slice($produits, $start, $limit);
+
+    // 7. Calculer le nombre total de pages
+    $totalPages = ceil($totalProduits / $limit);
+
+    // 8. Passer les données de pagination à la vue
+    return $this->render('produit/index.html.twig', [
+        'produits' => $produitsPagines,   // Produits pour la page actuelle
+        'totalPages' => $totalPages,      // Nombre total de pages
+        'currentPage' => $page,           // Page actuelle
+        'sortBy' => $sortBy,              // Paramètre de tri
+    ]);
+}
+*/
  #[Route('/{id}/delete', name: 'produit_delete', methods: ['POST'])]
  public function delete(Request $request, Produit $produit, EntityManagerInterface $em): Response
  {
@@ -267,71 +387,52 @@ public function editProduitByCategorie(
         'categorie' => $categorie,
     ]);
 }
-#[Route('/{id}/statistiques', name: 'statistiques_produits', methods: ['GET'])]
-    public function statistiquesProduits(ProduitRepository $produitRepository): JsonResponse
-    {
-        // Récupérer les statistiques des produits
-        $totalProduits = $produitRepository->count([]);
-        $prixMoyen = $produitRepository->getAveragePrice();
-        $produitMaxPrix = $produitRepository->getMaxPriceProduit();
-        $produitMinPrix = $produitRepository->getMinPriceProduit();
-        dump($totalProduits, $prixMoyen, $produitMaxPrix, $produitMinPrix);
 
-        // Structurer les données pour les statistiques
-        $statistiques = [
-            'total_produits' => $totalProduits,
-            'prix_moyen' => $prixMoyen,
-            'produit_max_prix' => $produitMaxPrix ? $produitMaxPrix['nom'] . ' - ' . $produitMaxPrix['prix'] : null,
-            'produit_min_prix' => $produitMinPrix ? $produitMinPrix['nom'] . ' - ' . $produitMinPrix['prix'] : null,
-        ];
 
-        // Retourner les statistiques sous forme de réponse JSON
-        return new JsonResponse($statistiques);
-    }
- 
-#[Route('/tag/{id}/produits', name: 'produits_by_tag', methods: ['GET'])]
-public function produitsByTag(int $id, TagRepository $tagRepository): JsonResponse
+
+
+#[Route('/statistiques', name: 'statistiques_produits', methods: ['GET'])]
+public function statistiquesProduits(ProduitRepository $produitRepository): Response
 {
-    // Trouver le tag par son ID
-    $tag = $tagRepository->find($id);
+    // Récupérer tous les produits ou d'autres critères
+    $produits = $produitRepository->findAll();
 
-    if (!$tag) {
-        return new JsonResponse(['error' => 'Tag introuvable.'], 404);
+    // Vérification si des produits existent
+    if (!$produits) {
+        throw $this->createNotFoundException('Aucun produit trouvé');
     }
 
-    // Récupérer les produits associés à ce tag
-    $produits = $tag->getProduits();
+    // Récupérer les statistiques
+    $totalProduits = count($produits);
+    $prixMoyen = $produitRepository->getAveragePrice();
+    $produitMaxPrix = $produitRepository->getMaxPriceProduit();
+    $produitMinPrix = $produitRepository->getMinPriceProduit();
+    
+    // Structurer les données pour les statistiques
+    $statistiques = [
+        'total_produits' => $totalProduits,
+        'prix_moyen' => $prixMoyen,
+        'produit_max_prix' => $produitMaxPrix ? $produitMaxPrix['nom'] . ' - ' . $produitMaxPrix['prix'] : null,
+        'produit_min_prix' => $produitMinPrix ? $produitMinPrix['nom'] . ' - ' . $produitMinPrix['prix'] : null,
+    ];
 
-    // Transformer les produits en un tableau JSON
-    $produitsData = [];
-    foreach ($produits as $produit) {
-        $produitsData[] = [
-            'nom' => $produit->getNom(),
-            'prix' => $produit->getPrix(),
-        ];
-    }
-
-    return new JsonResponse($produitsData);
-}
-
-
-
-
-#[Route('/produits/filtrer', name: 'produit_filtrer', methods: ['GET'])]
-public function filtrerProduits(ProduitRepository $produitRepository, Request $request): Response
-{
-    // Récupération des valeurs du formulaire
-    $prixMin = $request->query->get('prix_min', 0); // 0 par défaut
-    $prixMax = $request->query->get('prix_max', PHP_INT_MAX); // Valeur maximale par défaut
-
-    // Recherche des produits par plage de prix
-    $produits = $produitRepository->findByPriceRange((float) $prixMin, (float) $prixMax);
-
-    // Rendu de la vue
-    return $this->render('produit/produitFront.html.twig', [
-        'produits' => $produits,
+    // Retourner les statistiques sous forme de réponse
+    return $this->render('produit/statistiques.html.twig', [
+        'statistiques' => $statistiques
     ]);
 }
+
+
+
+
+
+ 
+
+
+
+
+
+
 
 
 
@@ -342,34 +443,13 @@ public function filtrerProduits(ProduitRepository $produitRepository, Request $r
         // Partie Avance
 
 
-        #[Route('/produitFront/search', name: 'produit_front_search', methods: ['GET', 'POST'])]
-        public function produitFrontSearch(Request $request, ProduitRepository $produitRepository): Response
-        {
-            // Créer le formulaire de recherche
-            $form = $this->createForm(AdvancedSearchType::class);
-            $form->handleRequest($request);
-        
-            $produits = [];
-        
-            if ($form->isSubmitted() && $form->isValid()) {
-                $data = $form->getData();
-        
-                // Rechercher les produits en fonction des critères
-                $nom = $data['nom'] ?? null;
-                $categorie = $data['CategorieProduit'] ?? null;
-        
-                $produits = $produitRepository->findByCriteria($nom, $categorie);
-            }
-        
-            // Rendu de la vue avec les résultats
-            return $this->render('produit_front/search.html.twig', [
-                'form' => $form->createView(),
-                'produits' => $produits,
-            ]);
-        }
         
     
-// src/Controller/ProduitController.php
+
+
+
+
+///hjti bihom
 #[Route('/recherche', name: 'produit_recherche', methods: ['GET', 'POST'])]
 public function rechercheAvancee(Request $request, ProduitRepository $produitRepository, EntityManagerInterface $entityManager): Response
 {
@@ -398,11 +478,13 @@ public function rechercheAvancee(Request $request, ProduitRepository $produitRep
     }
 
     // Rendre la vue avec les résultats de la recherche
-    return $this->render('produit/recherche.html.twig', [
+    return $this->render('produit/search.html.twig', [
         'form' => $form->createView(),
         'produits' => $produits,  // Passer les résultats à la vue
     ]);
 }
+
+//chek fihom 
 
 #[Route('/edit-produit/{id}', name: 'edit_produit')]
 public function editProduit(Produit $produit, Request $request, EntityManagerInterface $em): Response
@@ -429,6 +511,27 @@ public function editProduit(Produit $produit, Request $request, EntityManagerInt
     ]);
 }
 
+
+#[Route('/ajouter_aux_favoris/{produitId}', name: 'ajouter_aux_favoris')]
+public function ajouterAuxFavoris(int $produitId): Response
+{
+    // Logique pour ajouter un produit aux favoris
+    $produit = $this->getDoctrine()->getRepository(Produit::class)->find($produitId);
+
+    // Ajoutez le produit aux favoris de l'utilisateur connecté
+    if ($produit) {
+        $user = $this->getUser();
+        $user->addFavori($produit);
+        $this->getDoctrine()->getManager()->flush();
+
+        // Retourne une réponse avec un message de succès
+        $this->addFlash('success', 'Produit ajouté aux favoris avec succès !');
+    } else {
+        $this->addFlash('error', 'Le produit n\'a pas pu être ajouté.');
+    }
+
+    return $this->redirectToRoute('produit_liste');
+}
 
 
 

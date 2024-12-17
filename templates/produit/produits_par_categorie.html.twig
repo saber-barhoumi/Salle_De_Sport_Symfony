@@ -1,0 +1,24 @@
+{% extends 'base3.html.twig' %}
+
+{% block title %}Produits de la catégorie {{ categorie.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Produits de la catégorie : {{ categorie.nom }}</h1>
+
+    <div class="produits-list">
+        {% if produits is not empty %}
+            <ul>
+                {% for produit in produits %}
+                    <li>
+                        <h3>{{ produit.nom }}</h3>
+                        <p>Prix : {{ produit.prix }} €</p>
+                        <p>Description : {{ produit.description }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun produit trouvé dans cette catégorie.</p>
+        {% endif %}
+    </div>
+{% endblock %}
+

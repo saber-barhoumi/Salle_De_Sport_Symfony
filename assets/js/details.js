@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+/*document.addEventListener('DOMContentLoaded', function () {
     const modalContent = document.getElementById('productModalContent');
 
     document.querySelectorAll('.btn-details').forEach(button => {
@@ -17,3 +17,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+*/

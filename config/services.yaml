@@ -6,11 +6,24 @@ services:
         autowire: true      # Automatically inject dependencies
         autoconfigure: true # Automatically register your services as commands, event subscribers, etc.
         public: false       # Set the services to private by default
-
-    # Example service definition for FileUploader service
-    App\Service\FileUploader:
+   
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+   
+    
+   
+    App\Service\ProduitService:
         arguments:
-            $targetDirectory: '%images_directory%'
+            $produitRepository: '@App\Repository\ProduitRepository'
+ 
+ 
+
+    # Define the CartController service and inject EntityManager explicitly
+    App\Controller\CartController:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+        tags: ['controller.service_arguments']
 
     # App controllers and other services
     App\:
@@ -19,6 +32,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    # Define the CartService service
     App\Service\CartService:
         autowire: true
 
+   
+    
+
+    

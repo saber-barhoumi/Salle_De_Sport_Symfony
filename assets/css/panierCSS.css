@@ -1,4 +1,5 @@
 /* Style global pour la section */
+/*
 .section-title {
     text-align: center;
     font-size: 2rem;
@@ -90,7 +91,7 @@
 
 
 .cart-container {
-    display: none; /* Panier caché par défaut */
+    display: none; /* Panier caché par défaut 
     position: fixed;
     top: 0;
     right: 0;
@@ -104,3 +105,4 @@
 }
 
 
+*/

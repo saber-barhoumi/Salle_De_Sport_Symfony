@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -16,20 +18,37 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
+    
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom du produit est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le nom du produit ne doit pas dépasser {{ limit }} caractères."
+    )]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
+    #[Assert\NotBlank(message: "La description du produit est obligatoire.")]
+    #[Assert\Length(
+        min: 10,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères."
+    )]
 
     // Changez ce champ pour un tableau d'images
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Assert\Url(message: "L'image doit être une URL valide.")]
     private ?string $image;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Assert\NotBlank(message: "Le prix du produit est obligatoire.")]
+    #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
+
     private ?string $prix = null;
 
     #[ORM\Column(type: 'integer')]
+    #[Assert\NotBlank(message: "La quantité en stock est obligatoire.")]
+    #[Assert\PositiveOrZero(message: "La quantité en stock doit être un nombre positif ou zéro.")]
     private ?int $quantiteStock = null;
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
@@ -51,7 +70,7 @@ class Produit
     /**
      * @var Collection<int, Favoris>
      */
-    #[ORM\OneToMany(targetEntity: Favoris::class, mappedBy: 'produit')]
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Favoris::class, cascade: ['remove'], orphanRemoval: true)]
     private Collection $favoris;
 
     public function __construct()
@@ -218,6 +237,18 @@ class Produit
                 $favori->setProduit(null);
             }
         }
+
+        return $this;
+
+    }
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?Cart $cart): self
+    {
+        $this->cart = $cart;
 
         return $this;
     }
