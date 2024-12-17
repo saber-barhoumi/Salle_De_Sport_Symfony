@@ -86,4 +86,5 @@ class TypeSeance
     {
         return $this->type ?? '';
     }
+    
 }

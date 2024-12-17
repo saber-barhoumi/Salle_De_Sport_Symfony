@@ -45,16 +45,14 @@
                 <li><a href="{{ path('app_frontequipement') }}">Equipement</a></li>
                 <li><a href="{{ path('app_hclasses') }}">Classes</a></li>
                 <li><a href="{{ path('app_abonnements_front') }}#abonnements-section">Voir les abonnements</a></li>
-                <li><a href="./services.html">Services</a></li>
-                <li><a href="#">Pages</a>
+                <li><a href="{{ path('produit_front') }}">Voir nos produits</a> </li>
                     <ul class="dropdown">
                         <li><a href="{{ path('app_frontequipement') }}">Equipement</a></li>
                         <li><a href="{{ path('app_hclasses') }}">Classes</a></li>
                         <li><a href="{{ path('app_abonnements_front') }}#abonnements-section">Voir les abonnements</a></li>
-                        <li><a href="./404.html">404</a></li>
+                        <li><a href="{{ path('produit_front') }}">Voir nos produits</a> </li>
                     </ul>
                 </li>
-                <li><a href="./contact.html">Contact</a></li>
             </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
@@ -85,20 +83,19 @@
                             <li><a href="{{ path('app_frontequipement') }}">Equipement</a></li>
                             <li><a href="{{ path('app_hclasses') }}">Classes</a></li>
                             <li><a href="{{ path('app_abonnements_front') }}#abonnements-section">Voir les abonnements</a></li>
-                            {# <li><a href="{{ path('frontproduit_index') }}">Voir nos produits</a></li> #}
-                            {# <li><a href="{{ path('produit_front') }}">Voir nos produits</a></li> #}
+                            <li><a href="{{ path('produit_front') }}">Voir nos produits</a> </li>
+                            
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">
                                     <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
                                     <li><a href="{{ path('app_frontequipement') }}">Equipement</a></li>
                                     <li><a href="{{ path('app_hclasses') }}">Classes</a></li>
                                     <li><a href="{{ path('app_abonnements_front') }}#abonnements-section">Voir les abonnements</a></li>
-                                    {#<li><a href="{{ path('frontproduit_index') }}" class="btn btn-primary">Voir nos produits</a>#}
+                                    <li><a href="{{ path('produit_front') }}">Voir nos produits</a> </li>
                                     </li>
                                     <li><a href="./404.html">404</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./contact.html">Contact</a></li>
                         </ul>
                     </nav>
                 </div>

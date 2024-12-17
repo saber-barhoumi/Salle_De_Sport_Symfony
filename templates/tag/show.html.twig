@@ -1,0 +1,81 @@
+{% extends 'base3.html.twig' %}
+
+{% block body %}
+   
+<section class="team-section spad">
+
+    <div class="container">
+        <div class="row">
+            {% for produit in produits %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="ts-item set-bg" 
+                         data-setbg="{{ produit.image ? asset('uploads/images/' ~ produit.image) : 'https://via.placeholder.com/150' }}" 
+                         style="background-image: url('{{ produit.image ? asset('uploads/images/' ~ produit.image) : 'https://via.placeholder.com/150' }}');">
+                        <div class="ts_text">
+                            <h4>{{ produit.nom }}</h4>
+                            <p>{{ produit.description }}</p>
+                            <span>{{ produit.prix }} €</span>
+                            <a href="{{ path('cart_add', {id: produit.id}) }}" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>Aucun produit trouvé.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    </section>
+<section class="team-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 p-0">
+                <div class="team-title">
+                    <div class="section-title">
+                        <span>power</span>
+                        <h2>Voir nos produits</h2>
+                    </div>
+                    <a href="#" class="primary-btn btn-normal appoinment-btn">appointment</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Section des produits -->
+            <div class="col-lg-12">
+                <div class="ts-slider owl-carousel">
+                    {% for produit in produits %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="ts-item set-bg" 
+                                 data-setbg="{{ produit.image ? asset('uploads/images/' ~ produit.image) : 'https://via.placeholder.com/150' }}" 
+                                 style="background-image: url('{{ produit.image ? asset('uploads/images/' ~ produit.image) : 'https://via.placeholder.com/150' }}');">
+                                <div class="ts_text">
+                                    <h4>{{ produit.nom }}</h4>
+                                    <p>{{ produit.description }}</p>
+                                    <span>{{ produit.prix }} €</span>
+                                    <div class="btn-group mt-2">
+                                        <a href="{{ path('cart_add', {id: produit.id}) }}" class="btn btn-primary btn-sm">
+                                            Ajouter au Panier
+                                        </a>
+                                        <a href="{{ path('ajouter_favoris', {id: produit.id}) }}" class="btn btn-secondary btn-sm">
+                                            Ajouter au Favoris
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-12 text-center">
+                            <p>Aucun produit trouvé.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

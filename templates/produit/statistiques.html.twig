@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques du produit{% endblock %}
+
+{% block body %}
+    <h1>Statistiques du produit</h1>
+
+    <p><strong>Produit:</strong> {{ produit.nom }}</p>
+    <p><strong>Total des produits:</strong> {{ statistiques.total_produits }}</p>
+    <p><strong>Prix moyen:</strong> {{ statistiques.prix_moyen }}</p>
+    <p><strong>Produit avec le prix maximum:</strong> {{ statistiques.produit_max_prix }}</p>
+    <p><strong>Produit avec le prix minimum:</strong> {{ statistiques.produit_min_prix }}</p>
+{% endblock %}

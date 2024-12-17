@@ -1,0 +1,41 @@
+{# templates/produit/liste.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Produits{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des produits</h1>
+
+        {# Affichage des messages flash (si présents) #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            {% for produit in produits %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ asset(produit.imagePath) }}" class="card-img-top" alt="{{ produit.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ produit.name }}</h5>
+                            <p class="card-text">{{ produit.description }}</p>
+                            <p class="card-text"><strong>{{ produit.prix }} €</strong></p>
+                            {# Ajout du bouton pour ajouter aux favoris #}
+                            <a href="{{ path('ajouter_favoris', {'id': produit.id}) }}" class="btn btn-primary">Ajouter aux favoris</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

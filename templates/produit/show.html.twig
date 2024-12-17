@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produit{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mb-4">Détails du Produit</h1>
+
+    <div class="product-details">
+        <div class="row">
+            <!-- Image du produit -->
+            <div class="col-md-4">
+                {% if produit.image %}
+                    <img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.nom }}" class="img-fluid" style="max-height: 300px; object-fit: cover;">
+                {% else %}
+                    <p>Aucune image disponible</p>
+                {% endif %}
+            </div>
+
+            <!-- Détails du produit -->
+            <div class="col-md-8">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ produit.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ produit.Description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix</th>
+                            <td>{{ produit.prix }} €</td>
+                        </tr>
+                        <tr>
+                            <th>Quantité en Stock</th>
+                            <td>{{ produit.quantiteStock }}</td>
+                        </tr>
+                        <tr>
+                            <th>Catégorie</th>
+                            <td>{{ produit.CategorieProduit.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tags</th>
+                            <td>
+                                <ul>
+                                    {% for tag in produit.tags %}
+                                        <li>{{ tag.nom }}</li>
+                                    {% else %}
+                                        <li>Aucun tag disponible</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

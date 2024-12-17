@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la catégorie produit{% endblock %}
+
+{% block body %}
+    <div class="container" style="max-width: 800px; margin: auto; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h1 class="text-center mb-4" style="font-family: Arial, sans-serif; color: #333;">Modifier la catégorie de produit</h1>
+
+        {# Formulaire d'édition de la catégorie produit #}
+        {{ form_start(form) }}
+            <div class="form-group mb-4">
+                {{ form_label(form.nom, 'Nom de la catégorie 🏷️', {'label_attr': {'class': 'form-label', 'style': 'font-weight: bold; color: #444;'}}) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'style': 'padding: 10px; border: 1px solid #ccc; border-radius: 4px;'}}) }}
+                {{ form_errors(form.nom) }}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg mt-3" style="background-color: #28a745; border: none; padding: 10px 20px; border-radius: 4px; color: white; font-size: 16px;">
+                    ✏️ Modifier
+                </button>
+            </div>
+        {{ form_end(form) }}
+
+        {# Lien pour revenir à la liste des catégories de produits #}
+        <div class="mt-3 text-center">
+            <a href="{{ path('categorie_produit_index') }}" class="btn btn-secondary" style="background-color: #6c757d; border: none; padding: 10px 20px; border-radius: 4px; color: white; font-size: 16px;">
+                Retour à la liste
+            </a>
+        </div>
+
+        {# Formulaire de suppression avec confirmation #}
+        <div class="mt-3 text-center">
+            <form method="post" action="{{ path('categorie_produit_delete', {'id': categorie_produit.id}) }}" 
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie_produit.id) }}">
+                <button type="submit" class="btn btn-danger" style="background-color: #dc3545; border: none; padding: 10px 20px; border-radius: 4px; color: white; font-size: 16px;">
+                    🗑️ Supprimer
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

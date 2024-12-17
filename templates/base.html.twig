@@ -94,12 +94,14 @@
                 </div>
             </div>
 
-            <!-- Gestion des Membres -->
+            <!-- Gestion des Produits -->
             <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Gestion Membres</a>
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>Gestion Produits</a>
                 <div class="dropdown-menu bg-transparent border-0">
-                    <a href="#" class="dropdown-item">Liste des Membres</a>
-                    <a href="#" class="dropdown-item">Ajouter un Membre</a>
+                    <a href="{{ path('produit_index') }}" class="dropdown-item">Liste des Produits</a>
+                    <a href="{{ path('categorie_produit_index') }}" class="dropdown-item">Les Catégories des produits </a>
+                    <a href="{{ path('tag_lists') }}" class="dropdown-item">Les Tags </a>
+
                 </div>
             </div>
 

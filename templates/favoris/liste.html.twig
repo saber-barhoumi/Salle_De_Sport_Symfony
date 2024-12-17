@@ -1,0 +1,62 @@
+
+{% extends 'base3.html.twig' %}
+
+
+{% block title %}Liste des Produits{% endblock %}
+
+{% block body %}
+<h1>Liste des Produits</h1>
+
+<div id="produits">
+    {% for produit in produits %}
+        <div class="produit">
+            <h3>{{ produit.nom }}</h3>
+            <p>{{ produit.description }}</p>
+            <a href="#" 
+               class="btn btn-primary ajouter-favoris" 
+               data-id="{{ produit.id }}">
+                Ajouter aux Favoris
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+<a href="{{ path('liste_favoris') }}" class="btn btn-secondary">
+    Voir mes Favoris
+</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const favorisButtons = document.querySelectorAll('.ajouter-favoris');
+
+        favorisButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const produitId = button.getAttribute('data-id');
+
+                fetch(`/ajouter-favoris/${produitId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message); // Affiche une notification de succès
+                    } else if (data.status === 'info') {
+                        alert(data.message); // Produit déjà dans les favoris
+                    } else {
+                        alert('Erreur : ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de l\'ajout aux favoris:', error);
+                    alert('Une erreur est survenue. Veuillez réessayer.');
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Liste des Tags {% endblock %}
+
+{% block body %}
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 0;
+    list-style: none;
+}
+
+
+.pagination a, .pagination span {
+    padding: 10px 20px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.pagination a:hover, .pagination span:hover {
+    background-color: #007bff;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.pagination .active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.pagination .disabled {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #ddd;
+}
+
+.pagination .prev, .pagination .next {
+    font-weight: 700;
+    color: #007bff;
+}
+
+.pagination .prev:hover, .pagination .next:hover {
+    color: #0056b3; 
+    transform: translateY(-2px); 
+}
+
+.pagination .first, .pagination .last {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+</style>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">📋 Liste des Tags</h1>
+
+    <!-- Table des Tags -->
+    <table class="table table-bordered table-striped text-center">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom du Tag</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag in pagination %}
+                <tr>
+                    <td>{{ tag.id }}</td>
+                    <td>{{ tag.nom }}</td>
+                    <td>
+                        <!-- Bouton Modifier -->
+                        <a href="{{ path('tag_edit', { 'id': tag.id }) }}" class="btn btn-warning btn-sm">
+                            ✏️ Modifier
+                        </a>
+
+                        <!-- Bouton Supprimer -->
+                        <form action="{{ path('tag_delete', { 'id': tag.id }) }}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer ce tag ?');">
+                                🗑️ Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">Aucun tag disponible.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination justify-content-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+{% endblock %}
