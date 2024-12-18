@@ -1,0 +1,58 @@
+{% extends 'base3.html.twig' %}
+
+{% block title %}Détails de l'utilisateur{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center text-primary mb-4">Profile de l'utilisateur</h1>
+        
+        <div class="card shadow-lg p-4">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row">ID</th>
+                            <td>{{ utilisateur.id }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nom</th>
+                            <td>{{ utilisateur.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Prénom</th>
+                            <td>{{ utilisateur.prenom }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Mot de passe</th>
+                            <td>*****************</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Âge</th>
+                            <td>{{ utilisateur.age }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Genre</th>
+                            <td>{{ utilisateur.genre }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email</th>
+                            <td>{{ utilisateur.email }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Statut</th>
+                            <td>{{ utilisateur.statut }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Type Utilisateur</th>
+                            <td>{{ utilisateur.TypeUtilisateur.nom | default('USER') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour à HOME</a>
+        </div>
+    </div>
+{% endblock %}

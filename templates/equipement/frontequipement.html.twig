@@ -1,0 +1,71 @@
+{% extends 'base3.html.twig' %}
+
+{% block body %}
+    <!-- Espacement vide ajouté avant la section Reservation -->
+    <div class="mt-5"></div>
+
+    <!-- Reservation Section Begin -->
+    <section class="reservation-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span>Reservations</span>
+                <h2>View Your Reservations</h2>
+            </div>
+
+            <!-- Centered Button -->
+            <div class="d-flex justify-content-center">
+                <a href="{{ path('reservation_index') }}" class="btn btn-danger btn-lg">
+                    <i class="fa fa-list"></i> View Your Reservations
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- Reservation Section End -->
+
+    <!-- Equipment List Section Begin -->
+    <section class="equipment-list-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span>Our Equipments</span>
+                <h2>Explore Our Equipment</h2>
+            </div>
+
+            {% if equipementList is empty %}
+                <div class="text-center text-danger font-weight-bold">
+                    No equipment found.
+                </div>
+            {% else %}
+                <div class="row g-4">
+                    {% for equipement in equipementList %}
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100">
+                                {% if equipement.photo %}
+                                    <img src="{{ asset('uploads/images/' ~ equipement.photo) }}" alt="{{ equipement.nom }}" class="card-img-top">
+                                {% else %}
+                                    <img src="{{ asset('images/default.jpg') }}" alt="Default Image" class="card-img-top">
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ equipement.nom }}</h5>
+                                    <p class="card-text">
+                                        <strong>Category:</strong>
+                                        {% if equipement.equipement %}
+                                            {{ equipement.equipement.nom }}
+                                        {% else %}
+                                            No category
+                                        {% endif %}
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Description:</strong> {{ equipement.descriptions|slice(0, 100) ~ '...' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    <!-- Equipment List Section End -->
+{% endblock %}
+

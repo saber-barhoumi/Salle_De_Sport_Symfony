@@ -1,0 +1,91 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block header %}
+ {% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <!-- Flash Messages -->
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ flash_error }}
+        </div>
+    {% endfor %}
+
+    <!-- Registration Heading -->
+    <div class="text-center">
+        <h1 class="mb-4">Create Your Account</h1>
+        <p class="text-muted">Sign up to access all features!</p>
+    </div>
+
+    <!-- Form Errors -->
+    {% if form_errors(registrationForm) %}
+        <div class="alert alert-danger">
+            {{ form_errors(registrationForm) }}
+        </div>
+    {% endif %}
+
+    <!-- Registration Form -->
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body p-4">
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.nom, 'Last Name', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(registrationForm.nom, { 'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'} }) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.prenom, 'First Name', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(registrationForm.prenom, { 'attr': {'class': 'form-control', 'placeholder': 'Enter your first name'} }) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.age, 'Age', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(registrationForm.age, { 'attr': {'class': 'form-control', 'placeholder': 'Enter your age'} }) }}
+            </div>
+
+            <div class="form-check">
+                {{ form_label(registrationForm.genre, 'Genre', {'label_attr': {'class': 'form-check-input'}}) }}
+                <br>
+                {{ form_widget(registrationForm.genre, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_errors(registrationForm.genre) }}
+            </div>
+
+            <br><br>
+            <div class="form-check">
+                {{ form_label(registrationForm.statut, 'Status', {'label_attr': {'class': 'form-check-input'}}) }}
+                <br>
+                {{ form_widget(registrationForm.statut, {'attr': {'class': 'form-check-input', 'disabled': 'disabled'}}) }}
+                {{ form_errors(registrationForm.statut) }}
+            </div>
+
+            <br><br>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.email, 'Email Address', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control', 'placeholder': 'Enter your email'} }) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(registrationForm.plainPassword, 'Password', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(registrationForm.plainPassword, { 'attr': {'class': 'form-control', 'placeholder': 'Enter a secure password'} }) }}
+            </div>
+
+            <div class="form-check mb-4">
+                {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'form-check-input'} }) }}
+                {{ form_label(registrationForm.agreeTerms, 'I agree to the terms and conditions', { 'label_attr': {'class': 'form-check-label'} }) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100">Register</button>
+
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+
+    <!-- Login Link -->
+    <div class="text-center mt-4">
+        <p>Already have an account? <a href="{{ path('app_login') }}">Log in here</a></p>
+    </div>
+</div>
+{% endblock %}

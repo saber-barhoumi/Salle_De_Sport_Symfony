@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une séance{% endblock %}
+
+{% block body %}
+<h1 class="my-4 text-center">Modifier la séance</h1>
+
+<div class="container">
+    {% for type, messages in app.flashes %}
+        <div class="alert alert-{{ type }} mt-3">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+    <div class="mb-3">
+        {{ form_label(form.typeSeance, 'Type de séance', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.typeSeance, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.typeSeance) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.date, 'Date de la séance', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.date) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.nom, 'Nom de la séance', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.nomCoach, 'Nom du coach', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nomCoach, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nomCoach) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.salle, 'Salle', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.salle, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.salle) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.capaciteMax, 'Capacité maximale', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.capaciteMax, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.capaciteMax) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.participantsinscrits, 'Participants inscrits', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.participantsinscrits, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.participantsinscrits) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.objectif, 'Objectif', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.objectif, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.objectif) }}
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success mt-4">Modifier la séance</button>
+    </div>
+
+    {{ form_end(form) }}
+
+    <div class="text-center mt-4">
+        <a href="{{ path('list_seance') }}" class="btn btn-secondary">Retour à la liste des séances</a>
+    </div>
+</div>
+{% endblock %}

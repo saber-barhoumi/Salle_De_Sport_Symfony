@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- Red Section for Statistiques Globales -->
+    <div class="bg-danger text-white py-4 mb-4">
+        <h1 class="text-center">Statistiques Globales</h1>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Bloc 1: Statistiques des Catégories d'Équipements -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card bg-transparent border border-3 border-dark shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title">Catégories d'Équipements</h2>
+                    {% if categoryStats is empty %}
+                        <p>Aucune catégorie trouvée.</p>
+                    {% else %}
+                        <canvas id="categoryChart"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc 2: Statistiques des Équipements par Fournisseur -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card bg-transparent border border-3 border-dark shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title">Équipements par Fournisseur</h2>
+                    {% if supplierStats is empty %}
+                        <p>Aucun fournisseur trouvé.</p>
+                    {% else %}
+                        <canvas id="supplierChart"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc 3: Statistiques des Réservations par Equipement -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card bg-transparent border border-3 border-dark shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title"> Réservations par Equipement</h2>
+                    {% if groupedStats is empty %}
+                        <p>Aucune réservation trouvée.</p>
+                    {% else %}
+                        <canvas id="reservationChart"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Category Stats Chart
+        const categoryStats = {{ categoryStats|json_encode|raw }};
+        if (Object.keys(categoryStats).length > 0) {
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categoryStats),
+                    datasets: [{
+                        data: Object.values(categoryStats),
+                        backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)']
+                    }]
+                },
+                options: { plugins: { title: { display: true, text: 'Répartition des Catégories d\'Équipements' } } }
+            });
+        }
+
+        // Supplier Stats Chart
+        const supplierStats = {{ supplierStats|json_encode|raw }};
+        if (Object.keys(supplierStats).length > 0) {
+            new Chart(document.getElementById('supplierChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(supplierStats),
+                    datasets: [{
+                        data: Object.values(supplierStats),
+                        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)']
+                    }]
+                },
+                options: { plugins: { title: { display: true, text: 'Répartition des Équipements par Fournisseur' } } }
+            });
+        }
+
+        // Reservation Stats Chart (Grouped by User)
+        const groupedStats = {{ groupedStats|json_encode|raw }};
+        if (Object.keys(groupedStats).length > 0) {
+            const datasets = [];
+            const labels = [];
+            for (const user in groupedStats) {
+                const userStats = groupedStats[user];
+                const reservationCounts = userStats.map(stat => stat.reservation_count);
+                const equipmentNames = userStats.map(stat => stat.equipement);
+                labels.push(...equipmentNames);
+                datasets.push({
+                    label: user,
+                    data: reservationCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                });
+            }
+
+            new Chart(document.getElementById('reservationChart'), {
+                type: 'bar',
+                data: {
+                    labels: [...new Set(labels)],
+                    datasets: datasets
+                },
+                options: {
+                    plugins: { title: { display: true, text: 'Réservations par Equipement' } },
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+    </script>
+{% endblock %}

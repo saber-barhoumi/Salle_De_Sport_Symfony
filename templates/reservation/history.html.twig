@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des Réservations{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">
+        <i class="bi bi-clock-history me-2"></i>Historique des Réservations
+    </h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col"><i class="bi bi-hash"></i> ID</th>
+                    <th scope="col"><i class="bi bi-tools me-1"></i> Équipement</th>
+                    <th scope="col"><i class="bi bi-calendar-week me-1"></i> Date de Début</th>
+                    <th scope="col"><i class="bi bi-calendar-check me-1"></i> Date de Fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td>
+                            <i class="bi bi-card-list me-1"></i> {{ reservation.id }}
+                        </td>
+                        <td>
+                            <i class="bi bi-gear-fill me-1"></i> {{ reservation.equipement.nom }}
+                        </td>
+                        <td>
+                            <i class="bi bi-clock me-1"></i> {{ reservation.startDate|date('Y-m-d H:i') }}
+                        </td>
+                        <td>
+                            <i class="bi bi-clock me-1"></i> {{ reservation.endDate|date('Y-m-d H:i') }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-muted">
+                            <i class="bi bi-exclamation-circle me-2"></i> Aucune réservation trouvée.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

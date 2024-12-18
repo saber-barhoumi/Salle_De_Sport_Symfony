@@ -1,0 +1,25 @@
+{# templates/tag/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Éditer un Tag{% endblock %}
+
+{% block body %}
+    <h1>Modifier le Tag</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        <button class="btn btn-primary">Mettre à jour</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('tag_list') }}" class="btn btn-secondary">Retour à la liste</a>
+    
+{% endblock %}

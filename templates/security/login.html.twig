@@ -1,0 +1,69 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Log In{% endblock %}
+{% block header %}
+ {% endblock %}
+{% block body %}
+<section class="blog-section spad">
+<div class="container mt-5">
+    <!-- Flash Errors -->
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+
+    <!-- User Already Logged In -->
+    {% if app.user %}
+        <div class="alert alert-info">
+            You are already logged in as <strong>{{ app.user.userIdentifier }}</strong>. 
+            <a href="{{ path('app_logout') }}" class="text-decoration-none">Logout</a>
+        </div>
+    {% endif %}
+
+    <!-- Login Heading -->
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3">Welcome Back!</h1>
+        <p class="text-muted">Please log in to your account.</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body p-4">
+            <form method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="mb-3">
+                    <label for="inputEmail" class="form-label">Email Address</label>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" 
+                           class="form-control" placeholder="Enter your email" autocomplete="email" required autofocus>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputPassword" class="form-label">Password</label>
+                    <input type="password" name="password" id="inputPassword" 
+                           class="form-control" placeholder="Enter your password" autocomplete="current-password" required>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input type="checkbox" name="_remember_me" id="rememberMe" class="form-check-input">
+                    <label for="rememberMe" class="form-check-label">Remember me</label>
+                </div>
+
+                <button class="btn btn-primary btn-lg w-100" type="submit">Log In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Link -->
+    <div class="text-center mt-4">
+        <p>Don't have an account? <a href="{{ path('app_register') }}" class="text-decoration-none">Register here</a></p>
+    </div>
+
+    <!-- Forgot Password Link -->
+    <div class="text-center mt-3">
+        <p><a href="{{ path('app_password_reset') }}" class="text-decoration-none">Forgot your password?</a></p>
+    </div>
+</div>
+</section>
+{% endblock %}

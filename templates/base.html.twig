@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    {% block css %}
+    <!-- Favicon -->
+    <link href="{{asset('img/favicon.ico')}}" rel="icon">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="{{asset('https://fonts.googleapis.com')}}">
+    <link rel="preconnect" href="{{asset('https://fonts.gstatic.com')}}" crossorigin>
+    <link href="{{asset('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap')}}" rel="stylesheet"> 
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css')}}" rel="stylesheet">
+    <link href="{{asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css')}}" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{asset('lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
+    <link href="{{asset('lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    {% endblock %}
+</head>
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+        <!-- Sidebar Start -->
+<div class="sidebar pe-4 pb-3">
+    <nav class="navbar bg-secondary navbar-dark">
+        <!-- Titre et logo -->
+        <a href="index.html" class="navbar-brand mx-4 mb-3">
+            <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>GymLife</h3>
+        </a>
+
+        <!-- Section Profil de l'utilisateur -->
+        <div class="d-flex align-items-center ms-4 mb-4">
+            <div class="position-relative">
+                <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+            </div>
+            <div class="ms-3">
+                <h6 class="mb-0">hsan abdellatif</h6>
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <!-- Menu de navigation -->
+        <div class="navbar-nav w-100">
+            <a href="{{ path('app_dashboard') }}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+            <!-- Gestion des Utilisateurs -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Gestion Utilisateurs</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="{{ path('app_utilisateur') }}" class="dropdown-item">Liste des Utilisateurs</a>
+                    <a href="{{ path('app_ajoutUtilisateur') }}" class="dropdown-item">Ajouter un Utilisateur</a>
+                    <a href="{{ path('app_afficheTypeUtilisateur') }}" class="dropdown-item">Liste des TypeUtilisateurs</a>
+                    <a href="{{ path('app_ajoutTypeUtilisateur') }}" class="dropdown-item">Ajouter un TypeUtilisateur</a>
+                </div>
+            </div>
+
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>Gestion abonnement</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="{{ path('app_abonnement_index') }}" class="dropdown-item">Liste des abonnements</a>
+                    <a href="{{ path('app_abonnement_new') }}" class="dropdown-item">Ajouter un abonnement</a>
+                    <a href="{{ path('app_typeabonnement_index') }}" class="dropdown-item">Liste de types des abonnements</a>
+                    <a href="{{ path('app_typeabonnement_new') }}" class="dropdown-item">Ajouter un type d'abonnement</a>
+                    <a href="{{ path('achat_abonnement') }}" class="dropdown-item">liste des Abonnements acheté</a>
+                </div>
+            </div>
+
+           <!-- Gestion des Équipements -->
+             <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>Gestion Équipements</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="{{ path('app_show_equipement') }}" class="dropdown-item">Liste des equipement</a>
+                    <a href="{{ path('app_add_equipement') }}" class="dropdown-item">Ajouter un equipement</a>
+                    <a href="{{ path('app_show_categorie_equipement') }}" class="dropdown-item">Liste categories equipement</a>
+                    <a href="{{ path('app_add_categorie_equipement') }}" class="dropdown-item">Ajouter une categorie equipement</a>
+                    <a href="{{ path('app_historique_equipement') }}" class="dropdown-item">Historique des modifications</a>
+                    <a href="{{ path('reservation_history') }}" class="dropdown-item">Historique des réservations</a>
+
+                </div>
+            </div>
+
+            <!-- Gestion des Produits -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Gestion Produits</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="{{ path('produit_index') }}" class="dropdown-item">Liste des Produits</a>
+                    <a href="{{ path('categorie_produit_index') }}" class="dropdown-item">Les Catégories des produits </a>
+                    <a href="{{ path('tag_list') }}" class="dropdown-item">Les Tags </a>
+                </div>
+            </div>
+
+            <!-- Gestion des Séances -->
+           <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>Gestion Seances</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="{{ path('list_seance') }}" class="dropdown-item">Liste des Seances</a>
+                    <a href="{{ path('add_seance') }}" class="dropdown-item">Ajouter une Seance</a>
+                    <a href="{{ path('list_typeseance') }}" class="dropdown-item">Liste des types de Seances</a>
+                    <a href="{{ path('add_typeseance') }}" class="dropdown-item">Ajouter un type de Seance</a>
+                </div>
+            </div>
+            <!-- Blocs CRUD & Statistiques -->
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-cogs me-2"></i>Statistiques</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="{{path('stats_utilisateurs')}}" class="dropdown-item">Statistiques Utilisateurs</a>
+                    <a href="{{path('stats_produits')}}" class="dropdown-item">Statistiques Produits</a>
+                    <a href="{{ path('app_statistics') }}" class="dropdown-item">Statistiques Equipement</a>
+                    <a href="{{ path('stats_seances') }}" class="dropdown-item">Statistiques Séances</a>
+                    <a href="{{ path('statistique_abonn') }}" class="dropdown-item">Statistiques abonnements</a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+</div>
+<!-- Sidebar End -->
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+
+                <div class="navbar-nav align-items-center ms-auto">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-envelope me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Message</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all message</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">New user added</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Password changed</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="{{asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">hsan abdellatif</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="{{ path('app_utilisateur_show', { id: 2 }) }}" class="dropdown-item">My Profile</a>
+                            <a href="{{ path('app_ModifUtilisateur', { id: 2 }) }}" class="dropdown-item">Settings</a>
+                            <a href="{{ path('app_logout')}}" class="dropdown-item">Log Out</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+{% block body %}
+{% block title %}
+    <h1 class="display-4 text-center my-4">Bienvenue dans l'espace Admin</h1>
+{% endblock %}
+{% endblock %}
+{% block statistiques %}{% endblock %}
+
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="#">GymLife</a>, All Right Reserved. 
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            Designed By <a href="https://htmlcodex.com">GymLife Team</a>
+                            <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
+        </div>
+        <!-- Content End -->
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+    
+ {% block js %}
+    <!-- JavaScript Libraries -->
+    <script src="{{asset('https://code.jquery.com/jquery-3.4.1.min.js')}}"></script>
+    <script src="{{asset('https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('lib/chart/chart.min.js')}}"></script>
+    <script src="{{asset('lib/easing/easing.min.js')}}"></script>
+    <script src="{{asset('lib/waypoints/waypoints.min.js')}}"></script>
+    <script src="{{asset('lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/moment.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
+    <script src="{{asset('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <!-- Template Javascript -->
+    <script src="{{asset('js/main.js')}}"></script>
+{% endblock %}    
+</html>

@@ -1,0 +1,59 @@
+{% extends 'base3.html.twig' %}
+
+{% block title %}Panier{% endblock %}
+
+{% block body %}
+    <h1>Votre Panier</h1>
+
+    {% if cart is not empty %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                    <th>Quantité</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.produits %}
+                    <tr>
+                        <td>{{ item.nom }}</td>
+                        <td>{{ item.prix }} €</td>
+                        <td>{{ item.quantite }}</td>
+                        <td>{{ item.prix * item.quantite }} €</td>
+                        <td>
+                            <a href="{{ path('cart_remove', {'id': item.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="alert alert-info mt-3">
+            <h3>Total: {{ total }} €</h3>
+        </div>
+    {% else %}
+        <p>Votre panier est vide.</p>
+    {% endif %}
+
+    <h2>Produits disponibles</h2>
+    <div>
+        {% for produit in produitsDisponibles %}
+            <div class="card mb-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ produit.nom }}</h5>
+                    <p class="card-text">{{ produit.prix }} €</p>
+                    <a href="{{ path('cart_add', {'id': produit.id}) }}" class="btn btn-success">Ajouter au panier</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h3>Informations du Panier</h3>
+    <div>
+        <p>Nombre de produits dans le panier: {{ cart.produits|length }}</p>
+        <p>Total du panier: {{ total }} €</p>
+    </div>
+{% endblock %}

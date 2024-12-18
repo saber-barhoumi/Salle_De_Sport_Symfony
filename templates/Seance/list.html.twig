@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des séances{% endblock %}
+
+{% block body %}
+<h1 class="my-4 text-center">Liste des séances</h1>
+
+<div class="container">
+
+    <!-- Formulaire de recherche -->
+    <div class="mb-4">
+        {{ form_start(form) }}
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                {{ form_row(form.sortBy) }}
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" type="submit">Trier</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+    <!-- Liste des séances -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Nom</th>
+                    <th>Coach</th>
+                    <th>Capacité</th>
+                    <th>Salle</th>
+                    <th>Statut</th>
+                    <th>Type de Séance</th>
+                    <th>Objectif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for seance in seances %}
+                    <tr>
+                        <td>{{ seance.id }}</td>
+                        <td>{{ seance.date ? seance.date|date('d/m/Y') : 'N/A' }}</td>
+                        <td>{{ seance.nom }}</td>
+                        <td>{{ seance.nomCoach }}</td>
+                        <td>{{ seance.capaciteMax }}</td>
+                        <td>{{ seance.salle }}</td>
+                        <td>{{ seance.statut }}</td>
+                        <td>{{ seance.typeSeance ? seance.typeSeance.type : 'N/A' }}</td>
+                        <td>{{ seance.objectif ? seance.objectif : 'N/A' }}</td>
+                        <td>
+                            <a href="{{ path('modify_seance', { id: seance.id }) }}" class="btn btn-sm btn-warning">Modifier</a>
+                            <a href="{{ path('delete_seance', { id: seance.id }) }}" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center">Aucune séance disponible.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Lien pour ajouter une nouvelle séance -->
+    <div class="text-center mt-4">
+        <a href="{{ path('add_seance') }}" class="btn btn-success">Ajouter une nouvelle séance</a>
+    </div>
+
+</div>
+{% endblock %}

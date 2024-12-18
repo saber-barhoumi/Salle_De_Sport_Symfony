@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques des Abonnements{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-5">Statistiques des Abonnements</h1>
+
+    {# Section: Nombre d'abonnements par type #}
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h2 class="text-primary">Nombre d'abonnements par type</h2>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Type d'abonnement</th>
+                        <th>Nombre d'achats</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in nombreAbonnementsParType %}
+                        <tr>
+                            <td>{{ entry.typeAbonnement }}</td>
+                            <td>{{ entry.nombre }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <canvas id="chart-abonnement-nombre"></canvas>
+        </div>
+    </div>
+
+    {# Section: Montant total par type d'abonnement #}
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h2 class="text-success">Montant total par type d'abonnement</h2>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Type d'abonnement</th>
+                        <th>Montant total (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in montantParType %}
+                        <tr>
+                            <td>{{ entry.typeAbonnement }}</td>
+                            <td>{{ entry.montant|number_format(2, '.', ',') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <canvas id="chart-abonnement-montant"></canvas>
+        </div>
+    </div>
+
+    {# Section: Capacité totale par sport #}
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h2 class="text-danger">Capacité totale par sport</h2>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sport</th>
+                        <th>Capacité totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in capaciteParSport %}
+                        <tr>
+                            <td>{{ entry.sport }}</td>
+                            <td>{{ entry.capacite }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <canvas id="chart-capacite-sport"></canvas>
+        </div>
+    </div>
+</div>
+
+{# Inclusion de Chart.js #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Graphique : Nombre d'abonnements par type
+    const chartAbonnementNombre = new Chart(document.getElementById('chart-abonnement-nombre'), {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for entry in nombreAbonnementsParType %}
+                    "{{ entry.typeAbonnement }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Nombre d\'achats',
+                data: [
+                    {% for entry in nombreAbonnementsParType %}
+                        {{ entry.nombre }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+
+    // Graphique : Montant total par type
+    const chartAbonnementMontant = new Chart(document.getElementById('chart-abonnement-montant'), {
+        type: 'pie',
+        data: {
+            labels: [
+                {% for entry in montantParType %}
+                    "{{ entry.typeAbonnement }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for entry in montantParType %}
+                        {{ entry.montant }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 205, 86, 0.6)', 'rgba(153, 102, 255, 0.6)'],
+                hoverOffset: 4
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Graphique : Capacité totale par sport
+    const chartCapaciteSport = new Chart(document.getElementById('chart-capacite-sport'), {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for entry in capaciteParSport %}
+                    "{{ entry.sport }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for entry in capaciteParSport %}
+                        {{ entry.capacite }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: ['rgba(255, 159, 64, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(153, 102, 255, 0.6)']
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>
+{% endblock %}
