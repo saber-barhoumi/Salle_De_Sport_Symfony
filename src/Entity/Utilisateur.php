@@ -55,6 +55,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Choice(choices: ['ROLE_USER', 'ROLE_ADMIN'], message: "Le rôle doit être soit 'ROLE_USER' soit 'ROLE_ADMIN'.")]
     private ?string $role = 'ROLE_USER';
 
+    /**
+     * @ORM\OneToMany(targetEntity=Favoris::class, mappedBy="utilisateur", orphanRemoval=true)
+     */
+    private $favoris;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -225,5 +230,37 @@ public function getRoles(): array
 {
     return $this->getPrenom(); // Replace `getUsername` with the actual property or method you want to use
 }
+
+
+    public function __constructFavoris()
+    {
+        $this->favoris = new ArrayCollection();
+    }
+
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Favoris $favori): self
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris[] = $favori;
+            $favori->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Favoris $favori): self
+    {
+        if ($this->favoris->removeElement($favori)) {
+            if ($favori->getUtilisateur() === $this) {
+                $favori->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

@@ -30,7 +30,7 @@ class Favoris
         return $this->utilisateur;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): static
+    public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
 
@@ -42,7 +42,7 @@ class Favoris
         return $this->produit;
     }
 
-    public function setProduit(?Produit $produit): static
+    public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
 

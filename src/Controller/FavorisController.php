@@ -11,143 +11,146 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Security;
 
 
 class FavorisController extends AbstractController
 {
+    private $favorisRepository;
+    private $produitRepository;
+    private $entityManager;
+    private $security;
+
    public function __construct(
         FavorisRepository $favorisRepository,
         ProduitRepository $produitRepository,
         EntityManagerInterface $entityManager,
+        Security $security // Injection du service Security
+        
     ) {
         $this->favorisRepository = $favorisRepository;
         $this->produitRepository = $produitRepository;
         $this->entityManager = $entityManager;
+        $this->security = $security; // Initialisation de la propriété
     }
     
 
     
 
     #[Route('/mes-favoris', name: 'mes_favoris')]
-    public function afficherMesFavoris(?UserInterface $user): Response
+    public function afficherMesFavoris(): Response
     {
-        // Si l'utilisateur n'est pas connecté, on crée un utilisateur statique
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+    
         if (!$user) {
-            // If no user is logged in, create a default static user
-            $user = new Utilisateur();
-            $user->setNom('Saber');
-            $user->setPrenom('Brh');
-            $user->setEmail('saber.brh@example.com');
-            $user->setStatut('active');
-            $user->setMotDePasse('Saber123');
-            $user->setAge(24);
-
+            // Rediriger ou afficher un message d'erreur si l'utilisateur n'est pas connecté
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à vos favoris.');
+            return $this->redirectToRoute('app_login'); // Remplacez 'login' par la route de votre page de connexion
         }
-// Vérifier si l'utilisateur a un ID valide
-if (!$user->getId()) {
-    // Si pas d'ID, on ne tente pas de récupérer les favoris
-    $favoris = [];
-} else {
-    // Récupérer tous les favoris de l'utilisateur
-    $favoris = $this->favorisRepository->findFavorisByUser($user->getId());
-}
-        // Récupérer tous les produits disponibles
+    
+        // Récupérer tous les favoris de l'utilisateur connecté
+        $favoris = $this->favorisRepository->findBy(['utilisateur' => $user]);
+    
+        // Récupérer tous les produits disponibles (optionnel)
         $produits = $this->produitRepository->findAll();
-
+    
         // Retourner la vue avec les favoris et les produits disponibles
         return $this->render('favoris/mes_favoris.html.twig', [
             'favoris' => $favoris,
             'produits' => $produits,
         ]);
     }
+    
 
     
     #[Route('/ajouter-favoris/{id}', name: 'ajouter_favoris')]
-    public function ajouterAuxFavoris(int $id): Response
-    {
-        // Récupérer l'utilisateur connecté ou créer un utilisateur statique si non connecté
-        $user = $this->security->getUser();
-        if (!$user) {
-            $user = new Utilisateur();
-            $user->setNom('Saber');
-            $user->setPrenom('Brh');
-            $user->setAge(24);
-            $user->setEmail('saber.brh@example.com');
-            $user->setStatut('active');
-            $user->setMotDePasse('Saber123');
-        }
+public function ajouterAuxFavoris(int $id): Response
+{
+    // Récupérer l'utilisateur connecté
+    $user = $this->getUser();
+
+    if (!$user) {
+        // Rediriger ou afficher un message si aucun utilisateur n'est connecté
+        $this->addFlash('error', 'Vous devez être connecté pour ajouter un produit à vos favoris.');
+        return $this->redirectToRoute('app_login'); // Remplacez 'login' par la route vers votre page de connexion
+    }
+
+    // Récupérer le produit par son ID
+    $produit = $this->produitRepository->find($id);
     
-        // Récupérer le produit par son ID
-        $produit = $this->produitRepository->find($id);
-        
-        if (!$produit) {
-            $this->addFlash('error', 'Produit introuvable.');
-            return $this->redirectToRoute('mes_favoris');
-        }
-    
-        // Vérifier si le produit est déjà dans les favoris
-        $favorisExistant = $this->favorisRepository->findOneBy([
-            'utilisateur' => $user,
-            'produit' => $produit,
-        ]);
-    
-        if ($favorisExistant) {
-            $this->addFlash('info', 'Ce produit est déjà dans vos favoris.');
-            return $this->redirectToRoute('mes_favoris');
-        }
-    
-        // Ajouter le produit aux favoris
-        $favoris = new Favoris();
-        $favoris->setProduit($produit);
-        $favoris->setUtilisateur($user);
-    
-        $this->entityManager->persist($favoris);
-        $this->entityManager->flush();
-    
-        // Ajouter un message flash pour l'utilisateur
-        $this->addFlash('success', 'Produit ajouté aux favoris.');
-    
-        // Rediriger vers la liste des favoris
+    if (!$produit) {
+        $this->addFlash('error', 'Produit introuvable.');
         return $this->redirectToRoute('mes_favoris');
     }
+
+    // Vérifier si le produit est déjà dans les favoris
+    $favorisExistant = $this->favorisRepository->findOneBy([
+        'utilisateur' => $user,
+        'produit' => $produit,
+    ]);
+
+    if ($favorisExistant) {
+        $this->addFlash('info', 'Ce produit est déjà dans vos favoris.');
+        return $this->redirectToRoute('mes_favoris');
+    }
+
+    // Ajouter le produit aux favoris
+    $favoris = new Favoris();
+    $favoris->setProduit($produit);
+    $favoris->setUtilisateur($user);
+
+    $this->entityManager->persist($favoris);
+    $this->entityManager->flush();
+
+    // Ajouter un message flash pour l'utilisateur
+    $this->addFlash('success', 'Produit ajouté aux favoris.');
+
+    // Rediriger vers la liste des favoris
+    return $this->redirectToRoute('mes_favoris');
+}
+
     
     
 
-    #[Route('/supprimer-favoris/{id}', name: 'supprimer_favoris')]
-public function supprimerFavoris(int $id, ?UserInterface $user): Response
+#[Route('/supprimer-favoris/{id}', name: 'supprimer_favoris')]
+public function supprimerFavoris(int $id): Response
 {
-    // Si l'utilisateur n'est pas connecté, créer un utilisateur statique
+    // Récupérer l'utilisateur connecté
+    $user = $this->getUser();
+
+    // Vérifier si l'utilisateur est connecté
     if (!$user) {
-        $user = new Utilisateur();
-        $user->setNom('Saber');
-        $user->setPrenom('Brh');
-        $user->setEmail('saber.brh@example.com');
-        $user->setStatut('active');
-        $user->setMotDePasse('Saber123');
-        $user->setAge(24);
+        $this->addFlash('error', 'Vous devez être connecté pour supprimer un produit de vos favoris.');
+        return $this->redirectToRoute('app_login'); // Remplacez 'login' par le nom de la route de votre page de connexion
     }
 
     // Récupérer le produit par son ID
     $produit = $this->produitRepository->find($id);
 
-    if ($produit) {
-        // Récupérer les favoris associés au produit et à l'utilisateur
-        $favoris = $this->favorisRepository->findOneBy(['produit' => $produit, 'utilisateur' => $user]);
-
-        if ($favoris) {
-            // Supprimer le produit des favoris
-            $this->entityManager->remove($favoris);
-            $this->entityManager->flush();  // S'assurer que la suppression est effectuée
-
-            $this->addFlash('success', 'Produit retiré des favoris.');
-        } else {
-            $this->addFlash('error', 'Ce produit n\'est pas dans vos favoris.');
-        }
-    } else {
+    if (!$produit) {
         $this->addFlash('error', 'Produit introuvable.');
+        return $this->redirectToRoute('mes_favoris');
     }
 
-    // Rediriger vers la liste des favoris, qui doit être mise à jour
+    // Récupérer le favori associé au produit et à l'utilisateur connecté
+    $favoris = $this->favorisRepository->findOneBy([
+        'produit' => $produit,
+        'utilisateur' => $user,
+    ]);
+
+    if (!$favoris) {
+        $this->addFlash('error', 'Ce produit n\'est pas dans vos favoris.');
+    } else {
+        // Supprimer le favori
+        $this->entityManager->remove($favoris);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Produit retiré des favoris.');
+    }
+
+    // Rediriger vers la liste des favoris
     return $this->redirectToRoute('mes_favoris');
 }
+
 }
