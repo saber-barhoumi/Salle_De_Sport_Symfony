@@ -23,9 +23,14 @@ class ReservationController extends AbstractController
     // Route to display the list of reservations
     #[Route('/reservation', name: 'reservation_index')]
     public function index(ReservationRepository $reservationRepository): Response
-    {
-        // Get the logged-in user   
+    {    // Vérifier si l'utilisateur est connecté
         $utilisateur = $this->getUser();
+        if (!$utilisateur) {
+            $this->addFlash('error', 'Vous devez être connecté pour réserver une séance.');
+            return $this->redirectToRoute('app_login'); // Remplacez 'login' par la route de votre page de connexion
+        }
+        // Get the logged-in user   
+        //$utilisateur = $this->getUser();
 
         // Fetch reservations for the logged-in user
         $reservations = $reservationRepository->findBy(['utilisateur' => $utilisateur]);
