@@ -200,6 +200,18 @@ public function statEquipementFournisseur(EquipementRepository $equipementReposi
         'stats' => $stats,
     ]);
 }
+#[Route('/equipements/search', name: 'app_equipements_search', methods: ['GET'])]
+public function search(Request $request, EquipementRepository $equipementRepository): Response
+{
+    $query = $request->query->get('q', ''); // Get the search term
+    $results = $equipementRepository->searchByCategory($query); // Search by category
+
+    return $this->render('equipement/search.html.twig', [
+        'equipementList' => $results,
+        'query' => $query,
+    ]);
+}
+
 
 }
 

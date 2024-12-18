@@ -29,6 +29,14 @@
                 <span>Our Equipments</span>
                 <h2>Explore Our Equipment</h2>
             </div>
+            <!-- Search Bar -->
+<form action="{{ path('app_equipements_search') }}" method="get" class="mb-5">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search by category..." value="{{ app.request.get('q')|default('') }}">
+        <button type="submit" class="btn btn-danger">Search</button>
+    </div>
+</form>
+
 
             {% if equipementList is empty %}
                 <div class="text-center text-danger font-weight-bold">

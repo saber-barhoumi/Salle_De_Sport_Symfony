@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Equipment Search Results</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ asset('css2/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css2/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css2/style.css') }}">
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .section-title span {
+            display: block;
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: #e74c3c;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8), 0 0 12px rgba(255, 255, 255, 0.5);
+        }
+
+        .card {
+            background: linear-gradient(145deg, #2d2d2d, #4b4b4b);
+            border: 1px solid #555;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.2), 0 4px 15px rgba(255, 0, 0, 0.4);
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.6), 0 8px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .card-text {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .card-text strong {
+            color: #fff;
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .header-button-container {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header-button-container .home-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .header-button-container .home-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.8);
+            background: linear-gradient(145deg, #ff4d4d, #ff1a1a);
+        }
+
+        .header-button-container .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header-button-container .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .reservation-section {
+            background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
+            border-radius: 15px;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+
+        .equipment-list-section {
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title h2 {
+                font-size: 24px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .card-text {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="equipment-list-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span>Search Results</span>
+                <h2>Results for "{{ query }}"</h2>
+            </div>
+
+            {% if equipementList is empty %}
+                <div class="text-center text-danger font-weight-bold">
+                    No equipment found for the given category.
+                </div>
+            {% else %}
+                <div class="row g-4">
+                    {% for equipement in equipementList %}
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100">
+                                {% if equipement.photo %}
+                                    <img src="{{ asset('uploads/images/' ~ equipement.photo) }}" alt="{{ equipement.nom }}" class="card-img-top">
+                                {% else %}
+                                    <img src="{{ asset('images/default.jpg') }}" alt="Default Image" class="card-img-top">
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ equipement.nom }}</h5>
+                                    <p class="card-text">
+                                        <strong>Category:</strong>
+                                        {% if equipement.equipement %}
+                                            {{ equipement.equipement.nom }}
+                                        {% else %}
+                                            No category
+                                        {% endif %}
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Description:</strong> {{ equipement.descriptions|slice(0, 100) ~ '...' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Back to Equipment page button -->
+            <div class="text-center mt-4">
+                <a href="{{ path('app_frontequipement') }}" class="btn btn-danger">Back to Equipment</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Js Plugins -->
+    <script src="{{ asset('js2/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('js2/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

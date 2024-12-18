@@ -20,6 +20,18 @@ class EquipementRepository extends ServiceEntityRepository
         parent::__construct($registry, Equipement::class);
     }
 
+    public function searchByCategory(string $query): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.Equipement', 'c') // Join the category table
+            ->where('c.nom LIKE :query')   // Search in category names
+            ->setParameter('query', '%' . $query . '%')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    
+
 //    /**
 //     * @return Equipement[] Returns an array of Equipement objects
 //     */
