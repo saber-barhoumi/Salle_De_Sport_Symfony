@@ -6,6 +6,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Doctrine\Common\Collections\Collection;
+
 #[ORM\Entity(repositoryClass: SeanceRepository::class)]
 class Seance
 {
@@ -189,5 +191,14 @@ class Seance
         }
         return 0;
     }
+
+    #[ORM\OneToMany(mappedBy: 'seance', targetEntity: Rating::class)]
+private Collection $ratings;
+
+public function getRatings(): Collection
+{
+    return $this->ratings;
+}
+
 }
 
